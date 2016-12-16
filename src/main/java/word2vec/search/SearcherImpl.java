@@ -13,7 +13,7 @@ import java.nio.DoubleBuffer;
 import java.util.List;
 
 /** Implementation of {@link Searcher} */
-class SearcherImpl implements Searcher {
+public class SearcherImpl implements Searcher {
   private final NormalizedWord2VecModel model;
   private final ImmutableMap<String, Integer> word2vectorOffset;
 
