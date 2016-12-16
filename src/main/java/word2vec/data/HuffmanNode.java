@@ -21,7 +21,7 @@ public class HuffmanNode {
      */
     public final int count;
 
-    private HuffmanNode(byte[] code, int[] point, int idx, int count) {
+    public HuffmanNode(byte[] code, int[] point, int idx, int count) {
         this.code = code;
         this.point = point;
         this.idx = idx;
