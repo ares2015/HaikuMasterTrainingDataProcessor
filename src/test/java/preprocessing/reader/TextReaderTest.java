@@ -1,4 +1,4 @@
-package reader;
+package preprocessing.reader;
 
 import org.junit.Test;
 
