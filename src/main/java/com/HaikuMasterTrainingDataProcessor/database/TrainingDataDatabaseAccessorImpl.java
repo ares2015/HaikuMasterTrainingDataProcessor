@@ -1,6 +1,8 @@
 package com.HaikuMasterTrainingDataProcessor.database;
 
+import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
 import com.HaikuMasterTrainingDataProcessor.word2vec.search.Word2VecSearcher;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -42,5 +44,51 @@ public class TrainingDataDatabaseAccessorImpl implements TrainingDataDatabaseAcc
                 matches.get(8).match(), matches.get(8).distance(),
                 matches.get(9).match(), matches.get(9).distance(),
         });
+    }
+
+    @Override
+    public void insertTokenTagData(TokenTagData tokenTagData) {
+        String sql = "";
+        String token = tokenTagData.getToken();
+        if (tokenExistsInDatabase(token)) {
+            if (tokenTagData.isNoun()) {
+                int isNoun = tokenTagData.isNoun() ? 1 : 0;
+                sql = "update jos_haiku_master_token_tag_data set is_noun = ? where token = ?";
+                jdbcTemplate.update(sql, new Object[]{isNoun, token});
+            } else if (tokenTagData.isAdjective()) {
+                int isAdjective = tokenTagData.isAdjective() ? 1 : 0;
+                sql = "update jos_haiku_master_token_tag_data set is_adjective = ? where token = ?";
+                jdbcTemplate.update(sql, new Object[]{isAdjective, token});
+            } else if (tokenTagData.isVerb()) {
+                int isVerb = tokenTagData.isAdjective() ? 1 : 0;
+                sql = "update jos_haiku_master_token_tag_data set is_verb = ? where token = ?";
+                jdbcTemplate.update(sql, new Object[]{isVerb, token});
+            } else if (tokenTagData.isAdverb()) {
+                int isAdverb = tokenTagData.isAdverb() ? 1 : 0;
+                sql = "update jos_haiku_master_token_tag_data set is_adverb = ? where token = ?";
+                jdbcTemplate.update(sql, new Object[]{isAdverb, token});
+            }
+        } else {
+            sql = "insert into jos_haiku_master_token_tag_data (token, is_noun, is_adjective, is_verb, is_adverb) " +
+                    "values (?,?,?,?,?)";
+            int isNoun = tokenTagData.isNoun() ? 1 : 0;
+            int isAdjective = tokenTagData.isAdjective() ? 1 : 0;
+            int isVerb = tokenTagData.isVerb() ? 1 : 0;
+            int isAdverb = tokenTagData.isAdverb() ? 1 : 0;
+            jdbcTemplate.update(sql, new Object[]{token, isNoun, isAdjective, isVerb, isAdverb
+            });
+        }
+
+    }
+
+    private boolean tokenExistsInDatabase(String token) {
+        int id = -1;
+        final String sql = "select id from jos_nlp_bigrams where token=?";
+        try {
+            id = jdbcTemplate.queryForInt(sql, new Object[]{token});
+        } catch (final EmptyResultDataAccessException e) {
+            return false;
+        }
+        return id > 0;
     }
 }

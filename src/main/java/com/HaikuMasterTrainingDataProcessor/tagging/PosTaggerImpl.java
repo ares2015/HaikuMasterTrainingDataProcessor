@@ -37,7 +37,8 @@ public class PosTaggerImpl implements PosTagger {
             String word = token.get(CoreAnnotations.TextAnnotation.class);
             String tag = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
             if (TagsCache.tags.contains(tag)) {
-                TokenTagData tokenTagData = new TokenTagData(word, tag);
+                TokenTagData tokenTagData = new TokenTagData(word, TagsCache.nounTags.contains(tag), TagsCache.adjectiveTags.contains(tag),
+                        TagsCache.verbTags.contains(tag), TagsCache.adverbTags.contains(tag));
                 tokenTagDataList.add(tokenTagData);
             }
         }

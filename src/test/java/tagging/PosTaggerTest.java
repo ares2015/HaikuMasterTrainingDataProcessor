@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -18,19 +17,18 @@ public class PosTaggerTest {
     @Test
     public void testTag(){
         PosTagger posTagger = new PosTaggerImpl();
-        String sentence = "Donald Trump defeated Hillary Clinton in US presidential elections in November 2016";
+        String sentence = "Donald Trump defeated Hillary Clinton heavily in US presidential elections in November 2016";
         List<TokenTagData> tokenTagDataList = posTagger.tag(sentence);
         assertTrue(tokenTagDataList.size() > 0);
-        assertEquals("NNP", tokenTagDataList.get(0).getTag());
-        assertEquals("NNP", tokenTagDataList.get(1).getTag());
-        assertEquals("VBD", tokenTagDataList.get(2).getTag());
-        assertEquals("NNP", tokenTagDataList.get(3).getTag());
-        assertEquals("NNP", tokenTagDataList.get(4).getTag());
-        assertEquals("NNP", tokenTagDataList.get(5).getTag());
-        assertEquals("JJ", tokenTagDataList.get(6).getTag());
-        assertEquals("NNS", tokenTagDataList.get(7).getTag());
-        assertEquals("NNP", tokenTagDataList.get(8).getTag());
-
-
+        assertTrue(tokenTagDataList.get(0).isNoun());
+        assertTrue(tokenTagDataList.get(1).isNoun());
+        assertTrue(tokenTagDataList.get(2).isVerb());
+        assertTrue(tokenTagDataList.get(3).isNoun());
+        assertTrue(tokenTagDataList.get(4).isNoun());
+        assertTrue(tokenTagDataList.get(5).isAdverb());
+        assertTrue(tokenTagDataList.get(6).isNoun());
+        assertTrue(tokenTagDataList.get(7).isAdjective());
+        assertTrue(tokenTagDataList.get(8).isNoun());
+        assertTrue(tokenTagDataList.get(9).isNoun());
     }
 }

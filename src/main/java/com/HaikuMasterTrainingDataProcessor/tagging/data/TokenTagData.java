@@ -7,19 +7,39 @@ public class TokenTagData {
 
     private String token;
 
-    private String tag;
+    private boolean isNoun;
 
-    public TokenTagData(String token, String tag) {
+    private boolean isAdjective;
+
+    private boolean isVerb;
+
+    private boolean isAdverb;
+
+    public TokenTagData(String token, boolean isNoun, boolean isAdjective, boolean isVerb, boolean isAdverb) {
         this.token = token;
-        this.tag = tag;
+        this.isNoun = isNoun;
+        this.isAdjective = isAdjective;
+        this.isVerb = isVerb;
+        this.isAdverb = isAdverb;
     }
 
     public String getToken() {
         return token;
     }
 
-    public String getTag() {
-        return tag;
+    public boolean isNoun() {
+        return isNoun;
     }
 
+    public boolean isAdjective() {
+        return isAdjective;
+    }
+
+    public boolean isVerb() {
+        return isVerb;
+    }
+
+    public boolean isAdverb() {
+        return isAdverb;
+    }
 }
