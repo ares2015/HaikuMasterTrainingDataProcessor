@@ -32,16 +32,20 @@ public class PosTaggerImpl implements PosTagger {
         List<TokenTagData> tokenTagDataList = new ArrayList<>();
         Annotation annotation = new Annotation(inputSentence);
         pipeline.annotate(annotation);
-        CoreMap processedSentence = annotation.get(CoreAnnotations.SentencesAnnotation.class).get(0);
-        for (CoreLabel token : processedSentence.get(CoreAnnotations.TokensAnnotation.class)) {
-            String word = token.get(CoreAnnotations.TextAnnotation.class);
-            String tag = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
-            if (TagsCache.tags.contains(tag)) {
-                TokenTagData tokenTagData = new TokenTagData(word, TagsCache.nounTags.contains(tag), TagsCache.adjectiveTags.contains(tag),
-                        TagsCache.verbTags.contains(tag), TagsCache.adverbTags.contains(tag));
-                tokenTagDataList.add(tokenTagData);
+        if (annotation.get(CoreAnnotations.SentencesAnnotation.class).size() > 0) {
+            CoreMap processedSentence = annotation.get(CoreAnnotations.SentencesAnnotation.class).get(0);
+            for (CoreLabel token : processedSentence.get(CoreAnnotations.TokensAnnotation.class)) {
+                String word = token.get(CoreAnnotations.TextAnnotation.class);
+                String tag = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+                if (TagsCache.tags.contains(tag)) {
+                    System.out.println("token: " + word + " -> tag: " + tag);
+                    TokenTagData tokenTagData = new TokenTagData(word, TagsCache.nounTags.contains(tag), TagsCache.adjectiveTags.contains(tag),
+                            TagsCache.verbTags.contains(tag), TagsCache.adverbTags.contains(tag));
+                    tokenTagDataList.add(tokenTagData);
+                }
             }
         }
+
         return tokenTagDataList;
     }
 }

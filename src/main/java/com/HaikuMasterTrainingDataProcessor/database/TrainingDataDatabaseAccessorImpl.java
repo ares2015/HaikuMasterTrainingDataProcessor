@@ -78,12 +78,11 @@ public class TrainingDataDatabaseAccessorImpl implements TrainingDataDatabaseAcc
             jdbcTemplate.update(sql, new Object[]{token, isNoun, isAdjective, isVerb, isAdverb
             });
         }
-
     }
 
     private boolean tokenExistsInDatabase(String token) {
         int id = -1;
-        final String sql = "select id from jos_nlp_bigrams where token=?";
+        final String sql = "select id from jos_haiku_master_token_tag_data where token=?";
         try {
             id = jdbcTemplate.queryForInt(sql, new Object[]{token});
         } catch (final EmptyResultDataAccessException e) {

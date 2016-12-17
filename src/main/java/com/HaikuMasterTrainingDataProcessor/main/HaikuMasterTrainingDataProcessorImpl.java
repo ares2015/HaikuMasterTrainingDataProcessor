@@ -4,8 +4,6 @@ import com.HaikuMasterTrainingDataProcessor.database.TrainingDataDatabaseAccesso
 import com.HaikuMasterTrainingDataProcessor.tagging.PosTagger;
 import com.HaikuMasterTrainingDataProcessor.tagging.PosTaggerImpl;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
-import com.HaikuMasterTrainingDataProcessor.tokens.Tokenizer;
-import com.HaikuMasterTrainingDataProcessor.tokens.TokenizerImpl;
 import com.HaikuMasterTrainingDataProcessor.word2vec.analysis.Word2VecAnalyser;
 import com.HaikuMasterTrainingDataProcessor.word2vec.analysis.Word2VecAnalyserImpl;
 import com.HaikuMasterTrainingDataProcessor.word2vec.model.Word2VecModel;
@@ -31,7 +29,6 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
     String inputFilePath = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTextData.txt";
     String outputFilePath = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\Word2Vec.txt";
     Word2VecAnalyser word2VecAnalyser = new Word2VecAnalyserImpl(inputFilePath, outputFilePath);
-    private Tokenizer tokenizer = new TokenizerImpl();
     private PosTagger posTagger = new PosTaggerImpl();
 
     public static void main(String[] args) throws InterruptedException, TException, Word2VecSearcher.UnknownWordException, IOException {
@@ -41,14 +38,16 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
 
     @Override
     public void process() throws InterruptedException, TException, IOException, Word2VecSearcher.UnknownWordException {
+        long startTime = System.currentTimeMillis();
+        int numberOfTaggedWords = 0;
         Word2VecModel word2VecModel = word2VecAnalyser.analyseCBOW();
         Word2VecSearcher word2VecSearcher = new Word2VecSearcherImpl(word2VecModel);
         Iterable<String> vocab = word2VecModel.getVocab();
         for (String sentence : vocab) {
             List<TokenTagData> tokenTagDataList = posTagger.tag(sentence);
-            for(TokenTagData tokenTagData : tokenTagDataList){
+            numberOfTaggedWords += tokenTagDataList.size();
+            for (TokenTagData tokenTagData : tokenTagDataList) {
                 trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
-
             }
 
 //            for (String token : tokens) {
@@ -58,6 +57,10 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
 //                }
 //            }
         }
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.out.println("Data processed in " + elapsedTime / 1000 + " seconds");
+        System.out.println(numberOfTaggedWords + " were tagged and added into model");
     }
 
 }
