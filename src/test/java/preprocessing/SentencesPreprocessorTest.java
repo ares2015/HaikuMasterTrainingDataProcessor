@@ -1,8 +1,10 @@
 package preprocessing;
 
+import com.HaikuMasterTrainingDataProcessor.preprocessing.SentencePreprocessorImpl;
+import com.HaikuMasterTrainingDataProcessor.preprocessing.SentencesPreprocessor;
+import com.HaikuMasterTrainingDataProcessor.tokens.Tokenizer;
+import com.HaikuMasterTrainingDataProcessor.tokens.TokenizerImpl;
 import org.junit.Test;
-import tokens.Tokenizer;
-import tokens.TokenizerImpl;
 
 import java.util.ArrayList;
 import java.util.List;

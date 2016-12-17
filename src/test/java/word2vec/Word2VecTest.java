@@ -1,12 +1,12 @@
 package word2vec;
 
+import com.HaikuMasterTrainingDataProcessor.word2vec.analysis.Word2VecAnalyser;
+import com.HaikuMasterTrainingDataProcessor.word2vec.analysis.Word2VecAnalyserImpl;
+import com.HaikuMasterTrainingDataProcessor.word2vec.model.Word2VecModel;
+import com.HaikuMasterTrainingDataProcessor.word2vec.search.Word2VecSearcher;
+import com.HaikuMasterTrainingDataProcessor.word2vec.search.Word2VecSearcherImpl;
 import org.apache.thrift.TException;
 import org.junit.Test;
-import word2vec.analysis.Word2VecAnalyser;
-import word2vec.analysis.Word2VecAnalyserImpl;
-import word2vec.model.Word2VecModel;
-import word2vec.search.Word2VecSearcher;
-import word2vec.search.Word2VecSearcherImpl;
 
 import java.io.IOException;
 import java.util.List;

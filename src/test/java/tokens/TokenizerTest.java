@@ -1,5 +1,7 @@
 package tokens;
 
+import com.HaikuMasterTrainingDataProcessor.tokens.Tokenizer;
+import com.HaikuMasterTrainingDataProcessor.tokens.TokenizerImpl;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

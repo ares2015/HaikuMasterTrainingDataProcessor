@@ -1,5 +1,7 @@
 package preprocessing.reader;
 
+import com.HaikuMasterTrainingDataProcessor.preprocessing.reader.TextReader;
+import com.HaikuMasterTrainingDataProcessor.preprocessing.reader.TextReaderImpl;
 import org.junit.Test;
 
 import java.util.List;
