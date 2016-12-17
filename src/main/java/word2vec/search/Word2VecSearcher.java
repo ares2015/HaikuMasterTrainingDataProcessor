@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Oliver on 12/16/2016.
  */
-public interface Searcher {
+public interface Word2VecSearcher {
     /** @return true if a word is inside the model's vocabulary. */
     boolean contains(String word);
 

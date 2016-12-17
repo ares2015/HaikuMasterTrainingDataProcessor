@@ -5,8 +5,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Doubles;
-import word2vec.search.Searcher;
-import word2vec.search.SearcherImpl;
+import word2vec.search.Word2VecSearcher;
+import word2vec.search.Word2VecSearcherImpl;
 import word2vec.thrift.Word2VecModelThrift;
 import word2vec.training.Word2VecTrainerBuilder;
 import word2vec.util.AC;
@@ -59,10 +59,10 @@ public class Word2VecModel {
     }
 
     /**
-     * @return {@link Searcher} for searching
+     * @return {@link Word2VecSearcher} for searching
      */
-    public Searcher forSearch() {
-        return new SearcherImpl(this);
+    public Word2VecSearcher forSearch() {
+        return new Word2VecSearcherImpl(this);
     }
 
     /**

@@ -12,12 +12,12 @@ import word2vec.util.Pair;
 import java.nio.DoubleBuffer;
 import java.util.List;
 
-/** Implementation of {@link Searcher} */
-public class SearcherImpl implements Searcher {
+/** Implementation of {@link Word2VecSearcher} */
+public class Word2VecSearcherImpl implements Word2VecSearcher {
   private final NormalizedWord2VecModel model;
   private final ImmutableMap<String, Integer> word2vectorOffset;
 
-  SearcherImpl(final NormalizedWord2VecModel model) {
+  Word2VecSearcherImpl(final NormalizedWord2VecModel model) {
 	this.model = model;
 
 	final ImmutableMap.Builder<String, Integer> result = ImmutableMap.builder();
@@ -28,7 +28,7 @@ public class SearcherImpl implements Searcher {
 	word2vectorOffset = result.build();
   }
 
-  public SearcherImpl(final Word2VecModel model) {
+  public Word2VecSearcherImpl(final Word2VecModel model) {
 	this(NormalizedWord2VecModel.fromWord2VecModel(model));
   }
 
@@ -109,7 +109,7 @@ public class SearcherImpl implements Searcher {
 	return new SemanticDifference() {
 	  @Override public List<Match> getMatches(String word, int maxMatches) throws UnknownWordException {
 		double[] target = getDifference(getVector(word), diff);
-		return SearcherImpl.this.getMatches(target, maxMatches);
+		return Word2VecSearcherImpl.this.getMatches(target, maxMatches);
 	  }
 	};
   }

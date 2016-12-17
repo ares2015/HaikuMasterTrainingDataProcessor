@@ -1,5 +1,7 @@
 package tokens;
 
+import java.util.List;
+
 /**
  * Created by Oliver on 12/16/2016.
  */
@@ -10,4 +12,7 @@ public interface Tokenizer {
     String removeDoubleQuotes(String string);
 
     String removeEmptyStrings(String string);
+
+    public List<String> getTokens(final String sentence);
+
 }
