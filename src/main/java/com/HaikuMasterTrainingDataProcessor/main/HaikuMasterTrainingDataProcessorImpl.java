@@ -12,6 +12,7 @@ import com.HaikuMasterTrainingDataProcessor.word2vec.search.Word2VecSearcherImpl
 import org.apache.thrift.TException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.IOException;
@@ -47,26 +48,29 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
             List<TokenTagData> tokenTagDataList = posTagger.tag(sentence);
             numberOfTaggedWords += tokenTagDataList.size();
             for (TokenTagData tokenTagData : tokenTagDataList) {
-                trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
-                List<Word2VecSearcher.Match> matches = null;
                 try {
-                    matches = word2VecSearcher.getMatches(tokenTagData.getToken(), 10);
-                } catch (Word2VecSearcher.UnknownWordException e) {
-                    e.printStackTrace();
-                }
+                    trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
+                    List<Word2VecSearcher.Match> matches = null;
+                    try {
+                        matches = word2VecSearcher.getMatches(tokenTagData.getToken(), 11);
+                    } catch (Word2VecSearcher.UnknownWordException e) {
+                        e.printStackTrace();
+                    }
 //                for (Word2VecSearcher.Match match : matches) {
 //                    System.out.println(match.match() + " " + match.distance());
 //                }
-                if (matches != null) {
-                    trainingDataDatabaseAccessor.insertTokenWord2VecData(tokenTagData.getToken(), matches);
-                }
+                    if (matches != null) {
+                        trainingDataDatabaseAccessor.insertTokenWord2VecData(tokenTagData.getToken(), matches);
+                    }
+                } catch (CannotGetJdbcConnectionException ex) {
 
+                }
             }
         }
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
-        System.out.println("Data processed in " + elapsedTime / 1000 + " seconds");
-        System.out.println(numberOfTaggedWords + " were tagged and added into model");
+        System.out.println("Data processed in " + elapsedTime / 60 + " minutes");
+        System.out.println(numberOfTaggedWords + " tokens were tagged and added into model");
     }
 
 }
