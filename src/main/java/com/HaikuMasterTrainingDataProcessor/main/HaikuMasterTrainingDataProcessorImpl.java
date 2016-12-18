@@ -37,7 +37,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
     }
 
     @Override
-    public void process() throws InterruptedException, TException, IOException, Word2VecSearcher.UnknownWordException {
+    public void process() throws InterruptedException, TException, IOException {
         long startTime = System.currentTimeMillis();
         int numberOfTaggedWords = 0;
         Word2VecModel word2VecModel = word2VecAnalyser.analyseCBOW();
@@ -48,14 +48,20 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
             numberOfTaggedWords += tokenTagDataList.size();
             for (TokenTagData tokenTagData : tokenTagDataList) {
                 trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
-            }
-
-//            for (String token : tokens) {
-//                List<Word2VecSearcher.Match> matches = word2VecSearcher.getMatches(token, 10);
+                List<Word2VecSearcher.Match> matches = null;
+                try {
+                    matches = word2VecSearcher.getMatches(tokenTagData.getToken(), 10);
+                } catch (Word2VecSearcher.UnknownWordException e) {
+                    e.printStackTrace();
+                }
 //                for (Word2VecSearcher.Match match : matches) {
 //                    System.out.println(match.match() + " " + match.distance());
 //                }
-//            }
+                if (matches != null) {
+                    trainingDataDatabaseAccessor.insertTokenWord2VecData(tokenTagData.getToken(), matches);
+                }
+
+            }
         }
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
