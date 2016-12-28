@@ -32,6 +32,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
     Word2VecAnalyser word2VecAnalyser = new Word2VecAnalyserImpl(inputFilePath, outputFilePath);
     private PosTagger posTagger = new PosTaggerImpl();
 
+
     public static void main(String[] args) throws InterruptedException, TException, Word2VecSearcher.UnknownWordException, IOException {
         HaikuMasterTrainingDataProcessor haikuMasterTrainingDataProcessor = new HaikuMasterTrainingDataProcessorImpl();
         haikuMasterTrainingDataProcessor.process();

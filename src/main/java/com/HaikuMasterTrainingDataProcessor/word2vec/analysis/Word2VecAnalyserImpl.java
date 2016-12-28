@@ -2,11 +2,13 @@ package com.HaikuMasterTrainingDataProcessor.word2vec.analysis;
 
 import com.HaikuMasterTrainingDataProcessor.word2vec.model.Word2VecModel;
 import com.HaikuMasterTrainingDataProcessor.word2vec.neuralnetwork.NeuralNetworkType;
+import com.HaikuMasterTrainingDataProcessor.word2vec.reader.TextReader;
+import com.HaikuMasterTrainingDataProcessor.word2vec.reader.TextReaderImpl;
 import com.HaikuMasterTrainingDataProcessor.word2vec.training.Word2VecTrainerBuilder;
-import com.HaikuMasterTrainingDataProcessor.word2vec.util.*;
+import com.HaikuMasterTrainingDataProcessor.word2vec.util.AutoLog;
+import com.HaikuMasterTrainingDataProcessor.word2vec.util.Format;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.thrift.TException;
 
@@ -29,6 +31,8 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
 
     private String outputFilePath;
 
+    private TextReader textReader = new TextReaderImpl();
+
     public Word2VecAnalyserImpl(String inputFilePath, String outputFilePath) {
         this.inputFilePath = inputFilePath;
         this.outputFilePath = outputFilePath;
@@ -39,8 +43,8 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
         File f = new File(inputFilePath);
         if (!f.exists())
             throw new IllegalStateException("Please download and unzip the text8 example from http://mattmahoney.net/dc/text8.zip");
-        List<String> read = Common.readToList(f);
-        List<List<String>> partitioned = Lists.transform(read, new Function<String, List<String>>() {
+        List<String> sentences = textReader.readText();
+        List<List<String>> partitioned = Lists.transform(sentences, new Function<String, List<String>>() {
             @Override
             public List<String> apply(String input) {
                 return Arrays.asList(input.split(" "));
@@ -64,10 +68,6 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
                 })
                 .train(partitioned);
 
-        // Writes model to a thrift file
-        try (ProfilingTimer timer = ProfilingTimer.create(LOG, "Writing output to file")) {
-            FileUtils.writeStringToFile(new File(outputFilePath), ThriftUtils.serializeJson(model.toThrift()));
-        }
 
         // Alternatively, you can write the model to a bin file that's compatible with the C
         // implementation.
@@ -81,8 +81,8 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
 
     @Override
     public Word2VecModel analyseSkipgram() throws InterruptedException, IOException, TException {
-        List<String> read = Common.readToList(new File(inputFilePath));
-        List<List<String>> partitioned = Lists.transform(read, new Function<String, List<String>>() {
+        List<String> sentences = textReader.readText();
+        List<List<String>> partitioned = Lists.transform(sentences, new Function<String, List<String>>() {
             @Override
             public List<String> apply(String input) {
                 return Arrays.asList(input.split(" "));
@@ -107,9 +107,6 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
                 })
                 .train(partitioned);
 
-        try (ProfilingTimer timer = ProfilingTimer.create(LOG, "Writing output to file")) {
-            FileUtils.writeStringToFile(new File(outputFilePath), ThriftUtils.serializeJson(model.toThrift()));
-        }
         return model;
     }
 }

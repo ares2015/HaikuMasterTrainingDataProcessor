@@ -2,16 +2,11 @@ package com.HaikuMasterTrainingDataProcessor.word2vec.model;
 
 import com.HaikuMasterTrainingDataProcessor.word2vec.search.Word2VecSearcher;
 import com.HaikuMasterTrainingDataProcessor.word2vec.search.Word2VecSearcherImpl;
-import com.HaikuMasterTrainingDataProcessor.word2vec.thrift.Word2VecModelThrift;
 import com.HaikuMasterTrainingDataProcessor.word2vec.training.Word2VecTrainerBuilder;
 import com.HaikuMasterTrainingDataProcessor.word2vec.util.AC;
-import com.HaikuMasterTrainingDataProcessor.word2vec.util.Common;
 import com.HaikuMasterTrainingDataProcessor.word2vec.util.ProfilingTimer;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.primitives.Doubles;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,7 +25,6 @@ import java.util.List;
  * Instances of this class are obtained via:
  * <ul>
  * <li> {@link #trainer()}
- * <li> {@link #fromThrift(Word2VecModelThrift)}
  * </ul>
  *
  * @see {@link #forSearch()}
@@ -65,43 +59,6 @@ public class Word2VecModel {
         return new Word2VecSearcherImpl(this);
     }
 
-    /**
-     * @return Serializable thrift representation
-     */
-    public Word2VecModelThrift toThrift() {
-        double[] vectorsArray;
-        if (vectors.hasArray()) {
-            vectorsArray = vectors.array();
-        } else {
-            vectorsArray = new double[vectors.limit()];
-            vectors.position(0);
-            vectors.get(vectorsArray);
-        }
-
-        return new Word2VecModelThrift()
-                .setVocab(vocab)
-                .setLayerSize(layerSize)
-                .setVectors(Doubles.asList(vectorsArray));
-    }
-
-    /**
-     * @return {@link Word2VecModel} created from a thrift representation
-     */
-    public static Word2VecModel fromThrift(Word2VecModelThrift thrift) {
-        return new Word2VecModel(
-                thrift.getVocab(),
-                thrift.getLayerSize(),
-                Doubles.toArray(thrift.getVectors()));
-    }
-
-    /**
-     * @return {@link Word2VecModel} read from a file in the text output format of the Word2Vec C
-     * open source project.
-     */
-    public static Word2VecModel fromTextFile(File file) throws IOException {
-        List<String> lines = Common.readToList(file);
-        return fromTextFile(file.getAbsolutePath(), lines);
-    }
 
     /**
      * Forwards to {@link #fromBinFile(File, ByteOrder, ProfilingTimer)} with the default
@@ -248,51 +205,6 @@ public class Word2VecModel {
         }
 
         out.flush();
-    }
-
-    /**
-     * @return {@link Word2VecModel} from the lines of the file in the text output format of the
-     * Word2Vec C open source project.
-     */
-    @VisibleForTesting
-    static Word2VecModel fromTextFile(String filename, List<String> lines) throws IOException {
-        List<String> vocab = Lists.newArrayList();
-        List<Double> vectors = Lists.newArrayList();
-        int vocabSize = Integer.parseInt(lines.get(0).split(" ")[0]);
-        int layerSize = Integer.parseInt(lines.get(0).split(" ")[1]);
-
-        Preconditions.checkArgument(
-                vocabSize == lines.size() - 1,
-                "For file '%s', vocab size is %s, but there are %s word vectors in the file",
-                filename,
-                vocabSize,
-                lines.size() - 1
-        );
-
-        for (int n = 1; n < lines.size(); n++) {
-            String[] values = lines.get(n).split(" ");
-            vocab.add(values[0]);
-
-            // Sanity check
-            Preconditions.checkArgument(
-                    layerSize == values.length - 1,
-                    "For file '%s', on line %s, layer size is %s, but found %s values in the word vector",
-                    filename,
-                    n,
-                    layerSize,
-                    values.length - 1
-            );
-
-            for (int d = 1; d < values.length; d++) {
-                vectors.add(Double.parseDouble(values[d]));
-            }
-        }
-
-        Word2VecModelThrift thrift = new Word2VecModelThrift()
-                .setLayerSize(layerSize)
-                .setVocab(vocab)
-                .setVectors(vectors);
-        return fromThrift(thrift);
     }
 
     /**

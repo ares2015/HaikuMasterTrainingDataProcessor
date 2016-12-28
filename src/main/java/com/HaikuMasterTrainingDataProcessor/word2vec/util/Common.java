@@ -1,10 +1,8 @@
 package com.HaikuMasterTrainingDataProcessor.word2vec.util;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -117,15 +115,6 @@ public class Common {
     }
 
     /**
-     * Read the contents of the given file into a string
-     */
-    public static String readFileToString(File f) throws IOException {
-        StringWriter sw = new StringWriter();
-        IO.copyAndCloseBoth(Common.asReaderUTF8Lenient(new FileInputStream(f)), sw);
-        return sw.toString();
-    }
-
-    /**
      * @return true if i is an even number
      */
     public static boolean isEven(int i) {
@@ -139,16 +128,6 @@ public class Common {
         return !isEven(i);
     }
 
-    /**
-     * Read the lines (as UTF8) of the resource file fn from the package of the given class into a (unmodifiable) list of strings
-     *
-     * @throws IOException
-     */
-    public static List<String> readResource(Class<?> clazz, String fn) throws IOException {
-        try (final Reader reader = asReaderUTF8Lenient(getResourceAsStream(clazz, fn))) {
-            return readToList(reader);
-        }
-    }
 
     /**
      * Get an input stream to read the raw contents of the given resource, remember to close it :)
@@ -161,16 +140,6 @@ public class Common {
         return unpackStream(stream, fn);
     }
 
-    /**
-     * Get a file to read the raw contents of the given resource :)
-     */
-    public static File getResourceAsFile(Class<?> clazz, String fn) throws IOException {
-        URL url = clazz.getResource(fn);
-        if (url == null || url.getFile() == null) {
-            throw new IOException("resource \"" + fn + "\" relative to " + clazz + " not found.");
-        }
-        return new File(url.getFile());
-    }
 
     /**
      * @throws IOException if {@code is} is null or if an {@link IOException} is thrown when reading from {@code is}
@@ -187,12 +156,4 @@ public class Common {
         }
     }
 
-    /**
-     * Read the lines (as UTF8) of the resource file fn from the package of the given class into a string
-     */
-    public static String readResourceToStringChecked(Class<?> clazz, String fn) throws IOException {
-        try (InputStream stream = getResourceAsStream(clazz, fn)) {
-            return IOUtils.toString(asReaderUTF8Lenient(stream));
-        }
-    }
 }
