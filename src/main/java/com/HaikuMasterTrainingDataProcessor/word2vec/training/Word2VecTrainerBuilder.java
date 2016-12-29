@@ -64,7 +64,7 @@ import java.util.Map;
  */
 public class Word2VecTrainerBuilder {
 	private static final Log LOG = AutoLog.getLog();
-	
+
 	private Integer layerSize;
 	private Integer windowSize;
 	private Integer numThreads;

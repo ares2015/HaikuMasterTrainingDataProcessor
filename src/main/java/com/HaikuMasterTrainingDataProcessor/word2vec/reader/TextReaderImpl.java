@@ -1,5 +1,7 @@
 package com.HaikuMasterTrainingDataProcessor.word2vec.reader;
 
+import com.HaikuMasterTrainingDataProcessor.tokenizing.Tokenizer;
+import com.HaikuMasterTrainingDataProcessor.tokenizing.TokenizerImpl;
 import com.HaikuMasterTrainingDataProcessor.word2vec.util.StopWordsCache;
 
 import java.io.BufferedReader;
@@ -14,7 +16,10 @@ import java.util.List;
  */
 public class TextReaderImpl implements TextReader {
 
-    private String inputFilePath = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTextData.txt";
+    //    private String inputFilePath = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTextData.txt";
+    private String inputFilePath = "C:\\Users\\oliver.eder\\Downloads\\books\\HaikuMasterTextData.txt";
+
+    private Tokenizer tokenizer = new TokenizerImpl();
 
     public List<String> readText() {
         List<String> sentences = new ArrayList<>();
@@ -45,6 +50,16 @@ public class TextReaderImpl implements TextReader {
         tokTmp = sentence.split("\\ ");
         List<String> filteredTokens = new ArrayList<>();
         for (String token : tokTmp) {
+            if (tokenizer.containsSpecialChars(token)) {
+                token = tokenizer.removeSpecialCharacters(token);
+            }
+            try {
+                if (!tokenizer.isLowerCase(token)) {
+                    token = tokenizer.decapitalize(token);
+                }
+            }catch (StringIndexOutOfBoundsException e){
+                System.out.println(token);
+            }
             if (!(StopWordsCache.stopWordsCache.contains(token))) {
                 filteredTokens.add(token);
             }

@@ -19,8 +19,7 @@ import static org.junit.Assert.assertTrue;
 public class Word2VecTest {
 
     String inputFilePath = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTextData.txt";
-    String outputFilePath = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\Word2Vec.txt";
-    Word2VecAnalyser word2VecAnalyser = new Word2VecAnalyserImpl(inputFilePath, outputFilePath);
+    Word2VecAnalyser word2VecAnalyser = new Word2VecAnalyserImpl();
 
 
     @Test
