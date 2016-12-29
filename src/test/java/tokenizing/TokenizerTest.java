@@ -13,11 +13,11 @@ import static org.junit.Assert.assertEquals;
  */
 public class TokenizerTest {
 
-    Tokenizer tokenizer = new TokenizerImpl();
+    private Tokenizer tokenizer = new TokenizerImpl();
 
     @Test
     public void testRemoveSpecialCharacters() {
-        String token = ".dog,!?'''''";
+        String token = ":;.dog,!?'''''";
         assertEquals("dog", tokenizer.removeSpecialCharacters(token));
     }
 
@@ -29,7 +29,7 @@ public class TokenizerTest {
 
     @Test
     public void testContainsSpecialChars(){
-        String token = ".dog,!?'''''";
+        String token = ":;.dog,!?'''''";
         assertTrue(tokenizer.containsSpecialChars(token));
     }
 
