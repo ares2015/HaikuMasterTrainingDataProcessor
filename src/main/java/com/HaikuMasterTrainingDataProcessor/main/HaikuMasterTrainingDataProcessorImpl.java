@@ -6,6 +6,8 @@ import com.HaikuMasterTrainingDataProcessor.tagging.PosTaggerImpl;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
 import com.HaikuMasterTrainingDataProcessor.word2vec.analysis.Word2VecAnalyser;
 import com.HaikuMasterTrainingDataProcessor.word2vec.analysis.Word2VecAnalyserImpl;
+import com.HaikuMasterTrainingDataProcessor.word2vec.factory.Word2VecMatchTrainingRowFactory;
+import com.HaikuMasterTrainingDataProcessor.word2vec.factory.Word2VecMatchTrainingRowFactoryImpl;
 import com.HaikuMasterTrainingDataProcessor.word2vec.model.Word2VecModel;
 import com.HaikuMasterTrainingDataProcessor.word2vec.search.Word2VecSearcher;
 import com.HaikuMasterTrainingDataProcessor.word2vec.search.Word2VecSearcherImpl;
@@ -27,6 +29,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
 
     private Word2VecAnalyser word2VecAnalyser = new Word2VecAnalyserImpl();
     private PosTagger posTagger = new PosTaggerImpl();
+    private Word2VecMatchTrainingRowFactory word2VecMatchTrainingRowFactory = new Word2VecMatchTrainingRowFactoryImpl();
 
     public static void main(String[] args) throws InterruptedException, TException, Word2VecSearcher.UnknownWordException, IOException {
         HaikuMasterTrainingDataProcessor haikuMasterTrainingDataProcessor = new HaikuMasterTrainingDataProcessorImpl();
@@ -45,10 +48,12 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
             numberOfTaggedWords += tokenTagDataList.size();
             for (TokenTagData tokenTagData : tokenTagDataList) {
                 try {
-                    trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
+//                    trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
                     List<Word2VecSearcher.Match> matches = null;
                     try {
                         matches = word2VecSearcher.getMatches(tokenTagData.getToken(), 11);
+                        String trainigDataRow = word2VecMatchTrainingRowFactory.create(tokenTagData.getToken(), matches);
+                        System.out.println(trainigDataRow);
                     } catch (Word2VecSearcher.UnknownWordException e) {
                         e.printStackTrace();
                     }
@@ -62,7 +67,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
         }
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
-        System.out.println("Data processed in " + elapsedTime / 60 + " minutes");
+        System.out.println("Data processed in " + (elapsedTime / 1000) + " seconds / " + (elapsedTime / 1000) / 60 + " minutes");
         System.out.println(numberOfTaggedWords + " tokens were tagged and added into model");
     }
 
