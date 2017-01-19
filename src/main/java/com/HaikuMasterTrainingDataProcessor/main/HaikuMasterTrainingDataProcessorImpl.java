@@ -4,8 +4,6 @@ import com.HaikuMasterTrainingDataProcessor.database.TrainingDataDatabaseAccesso
 import com.HaikuMasterTrainingDataProcessor.tagging.PosTagger;
 import com.HaikuMasterTrainingDataProcessor.tagging.PosTaggerImpl;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
-import com.HaikuMasterTrainingDataProcessor.tokenizing.Tokenizer;
-import com.HaikuMasterTrainingDataProcessor.tokenizing.TokenizerImpl;
 import com.HaikuMasterTrainingDataProcessor.word2vec.analysis.Word2VecAnalyser;
 import com.HaikuMasterTrainingDataProcessor.word2vec.analysis.Word2VecAnalyserImpl;
 import com.HaikuMasterTrainingDataProcessor.word2vec.model.Word2VecModel;
@@ -15,7 +13,6 @@ import org.apache.thrift.TException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.IOException;
 import java.util.List;
@@ -56,7 +53,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                         e.printStackTrace();
                     }
                     if (matches != null) {
-                        trainingDataDatabaseAccessor.insertTokenWord2VecData(tokenTagData.getToken(), matches);
+
                     }
                 } catch (CannotGetJdbcConnectionException ex) {
                     System.out.println(ex);
