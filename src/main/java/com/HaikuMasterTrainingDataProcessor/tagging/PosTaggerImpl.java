@@ -39,7 +39,7 @@ public class PosTaggerImpl implements PosTagger {
                 String tag = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
                 if (TagsCache.tags.contains(tag)) {
                     TokenTagData tokenTagData = new TokenTagData(word, TagsCache.nounTags.contains(tag), TagsCache.adjectiveTags.contains(tag),
-                            TagsCache.verbTags.contains(tag), TagsCache.adverbTags.contains(tag));
+                            TagsCache.verbTags.contains(tag), TagsCache.adverbTags.contains(tag), TagsCache.tagsConversionMap.get(tag));
                     tokenTagDataList.add(tokenTagData);
                 }
             }

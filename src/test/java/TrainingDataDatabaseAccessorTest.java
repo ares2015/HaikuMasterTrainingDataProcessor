@@ -11,7 +11,7 @@ public class TrainingDataDatabaseAccessorTest {
 
     @Test
     public void testInsertTokenTagData() {
-        TokenTagData tokenTagData = new TokenTagData("dog", true, false, false, false);
+        TokenTagData tokenTagData = new TokenTagData("dog", true, false, false, false, "N");
 //        trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
     }
 }

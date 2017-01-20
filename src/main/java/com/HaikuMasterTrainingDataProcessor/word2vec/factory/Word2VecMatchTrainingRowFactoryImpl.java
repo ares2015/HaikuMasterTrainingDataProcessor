@@ -11,10 +11,14 @@ public class Word2VecMatchTrainingRowFactoryImpl implements Word2VecMatchTrainin
 
     @Override
     public String create(String token, List<Word2VecSearcher.Match> matches) {
+        int i = 0;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(token).append("#");
         for (Word2VecSearcher.Match match : matches) {
-            stringBuilder.append(match.match()).append("*").append(match.distance()).append("@");
+            if (i > 0) {
+                stringBuilder.append(match.match()).append("*").append(match.distance()).append("@");
+            }
+            i++;
         }
         return stringBuilder.toString();
     }

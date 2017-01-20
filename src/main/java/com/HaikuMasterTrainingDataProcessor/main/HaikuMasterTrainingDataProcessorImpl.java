@@ -17,7 +17,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Oliver on 12/17/2016.
@@ -38,8 +38,11 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
 
     @Override
     public void process() throws InterruptedException, TException, IOException {
+        Map<String, Set<String>> tokenTagDataCache = new HashMap<String, Set<String>>();
+        Set<String> vectorDataCache = new HashSet<String>();
         long startTime = System.currentTimeMillis();
         int numberOfTaggedWords = 0;
+        int numberOfWord2VecWords = 0;
         Word2VecModel word2VecModel = word2VecAnalyser.analyseCBOW();
         Word2VecSearcher word2VecSearcher = new Word2VecSearcherImpl(word2VecModel);
         Iterable<String> sentences = word2VecModel.getVocab();
@@ -47,13 +50,32 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
             List<TokenTagData> tokenTagDataList = posTagger.tag(sentence);
             numberOfTaggedWords += tokenTagDataList.size();
             for (TokenTagData tokenTagData : tokenTagDataList) {
+                List<Word2VecSearcher.Match> matches = null;
                 try {
-//                    trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
-                    List<Word2VecSearcher.Match> matches = null;
+                    String token = tokenTagData.getToken();
+                    String tag = tokenTagData.getTag();
+                    if (tokenTagDataCache.containsKey(token)) {
+                        if (!tokenTagDataCache.get(token).contains(tag)) {
+                            //                        trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
+                            numberOfTaggedWords++;
+                            tokenTagDataCache.get(token).add(tag);
+                        }
+                    } else {
+                        Set<String> tags = new HashSet<String>();
+                        tags.add(tag);
+                        tokenTagDataCache.put(token, tags);
+//                        trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
+                        numberOfTaggedWords++;
+                    }
                     try {
-                        matches = word2VecSearcher.getMatches(tokenTagData.getToken(), 11);
-                        String trainigDataRow = word2VecMatchTrainingRowFactory.create(tokenTagData.getToken(), matches);
-                        System.out.println(trainigDataRow);
+                        if (!vectorDataCache.contains(token)) {
+                            vectorDataCache.add(token);
+                            matches = word2VecSearcher.getMatches(token, 11);
+                            String trainigDataRow = word2VecMatchTrainingRowFactory.create(token, matches);
+                            numberOfWord2VecWords++;
+                            System.out.println(trainigDataRow);
+                        }
+
                     } catch (Word2VecSearcher.UnknownWordException e) {
                         e.printStackTrace();
                     }
@@ -68,7 +90,8 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         System.out.println("Data processed in " + (elapsedTime / 1000) + " seconds / " + (elapsedTime / 1000) / 60 + " minutes");
-        System.out.println(numberOfTaggedWords + " tokens were tagged and added into model");
+        System.out.println(numberOfTaggedWords + " token tags were added into tags model");
+        System.out.println(numberOfWord2VecWords + " tokens were added into word2vec model");
     }
 
 }

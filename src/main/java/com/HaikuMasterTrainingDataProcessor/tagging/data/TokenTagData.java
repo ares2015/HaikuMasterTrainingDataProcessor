@@ -15,12 +15,15 @@ public class TokenTagData {
 
     private boolean isAdverb;
 
-    public TokenTagData(String token, boolean isNoun, boolean isAdjective, boolean isVerb, boolean isAdverb) {
+    private String tag;
+
+    public TokenTagData(String token, boolean isNoun, boolean isAdjective, boolean isVerb, boolean isAdverb, String tag) {
         this.token = token;
         this.isNoun = isNoun;
         this.isAdjective = isAdjective;
         this.isVerb = isVerb;
         this.isAdverb = isAdverb;
+        this.tag = tag;
     }
 
     public String getToken() {
@@ -41,5 +44,9 @@ public class TokenTagData {
 
     public boolean isAdverb() {
         return isAdverb;
+    }
+
+    public String getTag() {
+        return tag;
     }
 }

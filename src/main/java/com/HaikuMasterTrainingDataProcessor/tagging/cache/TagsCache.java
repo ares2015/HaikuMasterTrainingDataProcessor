@@ -1,6 +1,8 @@
 package com.HaikuMasterTrainingDataProcessor.tagging.cache;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -17,6 +19,8 @@ public final class TagsCache {
     public static Set<String> verbTags = new HashSet<>();
 
     public static Set<String> adverbTags = new HashSet<>();
+
+    public static Map<String, String> tagsConversionMap = new HashMap<String, String>();
 
     static {
         tags.add("NN");
@@ -55,5 +59,25 @@ public final class TagsCache {
         adverbTags.add("RB");
         adverbTags.add("RBR");
         adverbTags.add("RBS");
+
+        tagsConversionMap.put("NN", "N");
+        tagsConversionMap.put("NNS", "N");
+        tagsConversionMap.put("NNP", "N");
+        tagsConversionMap.put("NNPS", "N");
+
+        tagsConversionMap.put("JJ", "AJ");
+        tagsConversionMap.put("JJR", "AJ");
+        tagsConversionMap.put("JJS", "AJ");
+
+        tagsConversionMap.put("VB", "V");
+        tagsConversionMap.put("VBD", "V");
+        tagsConversionMap.put("VBG", "V");
+        tagsConversionMap.put("VBN", "V");
+        tagsConversionMap.put("VBP", "V");
+        tagsConversionMap.put("VBZ", "V");
+
+        tagsConversionMap.put("RB", "AV");
+        tagsConversionMap.put("RBR", "AV");
+        tagsConversionMap.put("RBS", "AV");
     }
 }
