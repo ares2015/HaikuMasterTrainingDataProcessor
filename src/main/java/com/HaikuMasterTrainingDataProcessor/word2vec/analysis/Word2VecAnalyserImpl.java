@@ -1,16 +1,15 @@
 package com.HaikuMasterTrainingDataProcessor.word2vec.analysis;
 
+import com.HaikuMasterTrainingDataProcessor.reader.TextReader;
+import com.HaikuMasterTrainingDataProcessor.reader.TextReaderImpl;
 import com.HaikuMasterTrainingDataProcessor.word2vec.model.Word2VecModel;
 import com.HaikuMasterTrainingDataProcessor.word2vec.neuralnetwork.NeuralNetworkType;
-import com.HaikuMasterTrainingDataProcessor.word2vec.reader.TextReader;
-import com.HaikuMasterTrainingDataProcessor.word2vec.reader.TextReaderImpl;
 import com.HaikuMasterTrainingDataProcessor.word2vec.training.Word2VecTrainerBuilder;
 import com.HaikuMasterTrainingDataProcessor.word2vec.util.Format;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.apache.thrift.TException;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;

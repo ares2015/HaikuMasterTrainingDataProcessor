@@ -1,4 +1,4 @@
-package com.HaikuMasterTrainingDataProcessor.word2vec.reader;
+package com.HaikuMasterTrainingDataProcessor.reader;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.HaikuMasterTrainingDataProcessor.word2vec.reader;
+package com.HaikuMasterTrainingDataProcessor.reader;
 
 import com.HaikuMasterTrainingDataProcessor.tokenizing.Tokenizer;
 import com.HaikuMasterTrainingDataProcessor.tokenizing.TokenizerImpl;

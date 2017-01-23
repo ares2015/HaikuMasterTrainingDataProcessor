@@ -11,6 +11,8 @@ import com.HaikuMasterTrainingDataProcessor.word2vec.factory.Word2VecMatchTraini
 import com.HaikuMasterTrainingDataProcessor.word2vec.model.Word2VecModel;
 import com.HaikuMasterTrainingDataProcessor.word2vec.search.Word2VecSearcher;
 import com.HaikuMasterTrainingDataProcessor.word2vec.search.Word2VecSearcherImpl;
+import com.HaikuMasterTrainingDataProcessor.writer.TrainingDataRowWriter;
+import com.HaikuMasterTrainingDataProcessor.writer.TrainingDataRowWriterImpl;
 import org.apache.thrift.TException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -30,6 +32,11 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
     private Word2VecAnalyser word2VecAnalyser = new Word2VecAnalyserImpl();
     private PosTagger posTagger = new PosTaggerImpl();
     private Word2VecMatchTrainingRowFactory word2VecMatchTrainingRowFactory = new Word2VecMatchTrainingRowFactoryImpl();
+    private TrainingDataRowWriter trainingDataRowWriter = new TrainingDataRowWriterImpl();
+
+    public HaikuMasterTrainingDataProcessorImpl() throws IOException {
+    }
+
 
     public static void main(String[] args) throws InterruptedException, TException, Word2VecSearcher.UnknownWordException, IOException {
         HaikuMasterTrainingDataProcessor haikuMasterTrainingDataProcessor = new HaikuMasterTrainingDataProcessorImpl();
@@ -40,6 +47,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
     public void process() throws InterruptedException, TException, IOException {
         Map<String, Set<String>> tokenTagDataCache = new HashMap<String, Set<String>>();
         Set<String> vectorDataCache = new HashSet<String>();
+        List<String> trainingDataRows = new ArrayList<>();
         long startTime = System.currentTimeMillis();
         int numberOfTaggedWords = 0;
         int numberOfWord2VecWords = 0;
@@ -71,9 +79,9 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                         if (!vectorDataCache.contains(token)) {
                             vectorDataCache.add(token);
                             matches = word2VecSearcher.getMatches(token, 11);
-                            String trainigDataRow = word2VecMatchTrainingRowFactory.create(token, matches);
+                            String trainingDataRow = word2VecMatchTrainingRowFactory.create(token, matches);
+                            trainingDataRows.add(trainingDataRow);
                             numberOfWord2VecWords++;
-                            System.out.println(trainigDataRow);
                         }
 
                     } catch (Word2VecSearcher.UnknownWordException e) {
@@ -87,6 +95,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                 }
             }
         }
+        trainingDataRowWriter.write(trainingDataRows);
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         System.out.println("Data processed in " + (elapsedTime / 1000) + " seconds / " + (elapsedTime / 1000) / 60 + " minutes");
