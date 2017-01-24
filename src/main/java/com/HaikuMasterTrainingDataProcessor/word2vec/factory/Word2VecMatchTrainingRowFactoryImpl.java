@@ -16,7 +16,7 @@ public class Word2VecMatchTrainingRowFactoryImpl implements Word2VecMatchTrainin
         stringBuilder.append(token).append("#");
         for (Word2VecSearcher.Match match : matches) {
             if (i > 0) {
-                stringBuilder.append(match.match()).append("*").append(match.distance()).append("@");
+                stringBuilder.append(match.match()).append("%").append(match.distance()).append("@");
             }
             i++;
         }
