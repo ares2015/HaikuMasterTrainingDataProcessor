@@ -37,6 +37,7 @@ public class TrainingDataDatabaseAccessorImpl implements TrainingDataDatabaseAcc
                 int isAdverb = tokenTagData.isAdverb() ? 1 : 0;
                 sql = "update jos_haiku_master_token_tag_data set is_adverb = ? where id = ?";
                 jdbcTemplate.update(sql, new Object[]{isAdverb, tokenId});
+                System.out.println("UPDATE: " + token);
             }
         } else {
             sql = "insert into jos_haiku_master_token_tag_data (token, is_noun, is_adjective, is_verb, is_adverb) " +
@@ -47,7 +48,9 @@ public class TrainingDataDatabaseAccessorImpl implements TrainingDataDatabaseAcc
             int isAdverb = tokenTagData.isAdverb() ? 1 : 0;
             jdbcTemplate.update(sql, new Object[]{token, isNoun, isAdjective, isVerb, isAdverb
             });
+            System.out.println("INSERT: " + token);
         }
+
     }
 
     private int getTokenId(String token) {

@@ -80,12 +80,12 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                             vectorDataCache.add(token);
                             matches = word2VecSearcher.getMatches(token, 11);
                             String trainingDataRow = word2VecMatchTrainingRowFactory.create(token, matches);
+                            System.out.println(trainingDataRow);
                             trainingDataRows.add(trainingDataRow);
                             numberOfWord2VecWords++;
                         }
-
                     } catch (Word2VecSearcher.UnknownWordException e) {
-                        e.printStackTrace();
+//                        e.printStackTrace();
                     }
                     if (matches != null) {
 
