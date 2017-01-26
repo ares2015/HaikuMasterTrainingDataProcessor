@@ -16,8 +16,8 @@ import java.util.List;
  */
 public class TextReaderImpl implements TextReader {
 
-    //    private String inputFilePath = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTextData.txt";
-    private String inputFilePath = "C:\\Users\\oliver.eder\\Downloads\\books\\HaikuMasterTextData.txt";
+    private String inputFilePath = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTextData.txt";
+
 
     private Tokenizer tokenizer = new TokenizerImpl();
 
@@ -57,7 +57,7 @@ public class TextReaderImpl implements TextReader {
                 if (!tokenizer.isLowerCase(token)) {
                     token = tokenizer.decapitalize(token);
                 }
-            }catch (StringIndexOutOfBoundsException e){
+            } catch (StringIndexOutOfBoundsException e) {
                 System.out.println(token);
             }
             if (!(StopWordsCache.stopWordsCache.contains(token))) {

@@ -64,7 +64,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                     String tag = tokenTagData.getTag();
                     if (tokenTagDataCache.containsKey(token)) {
                         if (!tokenTagDataCache.get(token).contains(tag)) {
-                            //                        trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
+                            trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
                             numberOfTaggedWords++;
                             tokenTagDataCache.get(token).add(tag);
                         }
@@ -72,7 +72,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                         Set<String> tags = new HashSet<String>();
                         tags.add(tag);
                         tokenTagDataCache.put(token, tags);
-//                        trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
+                        trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
                         numberOfTaggedWords++;
                     }
                     try {

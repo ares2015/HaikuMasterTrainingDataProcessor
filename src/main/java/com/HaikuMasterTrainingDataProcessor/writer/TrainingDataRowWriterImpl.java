@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class TrainingDataRowWriterImpl implements TrainingDataRowWriter {
 
-    private String outputFilePath = "C:\\Users\\oliver.eder\\Downloads\\books\\Word2VecModelData.txt";
+    private String outputFilePath = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\Word2VecModelData.txt";
 
     private BufferedWriter bw = null;
 
