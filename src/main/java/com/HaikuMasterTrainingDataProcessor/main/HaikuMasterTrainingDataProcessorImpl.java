@@ -60,9 +60,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
         Iterable<String> sentences = word2VecModel.getSentences();
         for (String sentence : sentences) {
             List<TokenTagData> tokenTagDataList = posTagger.tag(sentence);
-            numberOfTaggedWords += tokenTagDataList.size();
             for (TokenTagData tokenTagData : tokenTagDataList) {
-                List<Word2VecSearcher.Match> matches = null;
                 String token = tokenTagData.getToken();
                 String tag = tokenTagData.getTag();
                 if (!(StopWordsCache.stopWordsCache.contains(token))) {
@@ -87,23 +85,20 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                             trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
                             numberOfTaggedWords++;
                         }
-                        try {
-                            if (!vectorDataCache.contains(token)) {
-                                vectorDataCache.add(token);
-                                matches = word2VecSearcher.getMatches(token, 11);
-                                String trainingDataRow = word2VecMatchTrainingRowFactory.create(token, matches);
-                                System.out.println(trainingDataRow);
-                                trainingDataRows.add(trainingDataRow);
-                                numberOfWord2VecWords++;
-                            }
-                        } catch (Word2VecSearcher.UnknownWordException e) {
-//                        e.printStackTrace();
-                        }
-                        if (matches != null) {
-
-                        }
                     } catch (CannotGetJdbcConnectionException ex) {
                         System.out.println(ex);
+                    }
+                    try {
+                        if (!vectorDataCache.contains(token)) {
+                            vectorDataCache.add(token);
+                            List<Word2VecSearcher.Match> matches = word2VecSearcher.getMatches(token, 11);
+                            String trainingDataRow = word2VecMatchTrainingRowFactory.create(token, matches);
+                            System.out.println(trainingDataRow);
+                            trainingDataRows.add(trainingDataRow);
+                            numberOfWord2VecWords++;
+                        }
+                    } catch (Word2VecSearcher.UnknownWordException e) {
+//                        e.printStackTrace();
                     }
                 }
             }
@@ -116,5 +111,4 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
         System.out.println(numberOfTaggedWords + " token tags were added into tags model");
         System.out.println(numberOfWord2VecWords + " tokens were added into word2vec model");
     }
-
 }
