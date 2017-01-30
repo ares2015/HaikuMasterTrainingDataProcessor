@@ -17,8 +17,9 @@ public class TokenizerTest {
 
     @Test
     public void testRemoveSpecialCharacters() {
-        String token = ":;.dog,!?'''''";
+        String token = ":;.dog,!?'''''_“";
         assertEquals("dog", tokenizer.removeSpecialCharacters(token));
+        assertEquals("she", tokenizer.removeSpecialCharacters("_she_"));
     }
 
     @Test

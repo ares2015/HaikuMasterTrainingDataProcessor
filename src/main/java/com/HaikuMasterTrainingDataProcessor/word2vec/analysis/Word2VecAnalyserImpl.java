@@ -47,7 +47,7 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
                     }
                 })
                 .train(tokens);
-
+        model.setSentences(sentences);
         return model;
     }
 

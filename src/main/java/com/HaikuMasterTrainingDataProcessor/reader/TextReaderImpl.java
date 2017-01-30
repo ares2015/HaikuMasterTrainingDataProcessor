@@ -2,7 +2,6 @@ package com.HaikuMasterTrainingDataProcessor.reader;
 
 import com.HaikuMasterTrainingDataProcessor.tokenizing.Tokenizer;
 import com.HaikuMasterTrainingDataProcessor.tokenizing.TokenizerImpl;
-import com.HaikuMasterTrainingDataProcessor.word2vec.util.StopWordsCache;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -33,7 +32,7 @@ public class TextReaderImpl implements TextReader {
             String sentence = br.readLine();
             while (sentence != null) {
                 if (!"".equals(sentence)) {
-                    sentence = removeStopWordsFromSentence(sentence);
+                    sentence = preprocessSentence(sentence);
                 }
                 sentences.add(sentence);
                 sentence = br.readLine();
@@ -45,26 +44,15 @@ public class TextReaderImpl implements TextReader {
         return sentences;
     }
 
-    private String removeStopWordsFromSentence(String sentence) {
+    private String preprocessSentence(String sentence) {
         String[] tokTmp;
         tokTmp = sentence.split("\\ ");
-        List<String> filteredTokens = new ArrayList<>();
+        List<String> preprocessedTokens = new ArrayList<>();
         for (String token : tokTmp) {
-            if (tokenizer.containsSpecialChars(token)) {
-                token = tokenizer.removeSpecialCharacters(token);
-            }
-            try {
-                if (!tokenizer.isLowerCase(token)) {
-                    token = tokenizer.decapitalize(token);
-                }
-            } catch (StringIndexOutOfBoundsException e) {
-                System.out.println(token);
-            }
-            if (!(StopWordsCache.stopWordsCache.contains(token))) {
-                filteredTokens.add(token);
-            }
+            token = tokenizer.removeSpecialCharacters(token);
+            preprocessedTokens.add(token);
         }
-        final List<String> tokens = removeEmptyStringInSentence(filteredTokens);
+        final List<String> tokens = removeEmptyStringInSentence(preprocessedTokens);
         return convertListToString(tokens);
     }
 

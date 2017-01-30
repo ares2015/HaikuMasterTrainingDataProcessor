@@ -1,21 +1,9 @@
 package com.HaikuMasterTrainingDataProcessor.word2vec.model;
 
-import com.HaikuMasterTrainingDataProcessor.word2vec.search.Word2VecSearcher;
-import com.HaikuMasterTrainingDataProcessor.word2vec.search.Word2VecSearcherImpl;
 import com.HaikuMasterTrainingDataProcessor.word2vec.training.Word2VecTrainerBuilder;
-import com.HaikuMasterTrainingDataProcessor.word2vec.util.AC;
-import com.HaikuMasterTrainingDataProcessor.word2vec.util.ProfilingTimer;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.*;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
+import java.nio.DoubleBuffer;
 import java.util.List;
 
 
@@ -33,6 +21,7 @@ public class Word2VecModel {
     public final int layerSize;
     public final DoubleBuffer vectors;
     private final static long ONE_GB = 1024 * 1024 * 1024;
+    private List<String> sentences;
 
     Word2VecModel(Iterable<String> vocab, int layerSize, DoubleBuffer vectors) {
         this.vocab = ImmutableList.copyOf(vocab);
@@ -56,5 +45,13 @@ public class Word2VecModel {
      */
     public static Word2VecTrainerBuilder trainer() {
         return new Word2VecTrainerBuilder();
+    }
+
+    public void setSentences(List<String> sentences){
+        this.sentences = sentences;
+    }
+
+    public List<String> getSentences(){
+        return sentences;
     }
 }

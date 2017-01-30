@@ -22,9 +22,7 @@ public class TokenizerImpl implements Tokenizer {
         StringBuilder stringBuilder = new StringBuilder();
         char[] chars = token.toCharArray();
         for (char c : chars) {
-            if (c != ',' && c != '.' && c != '!' && c != '?' && c != ':'
-                    && c != ';' && !"\"".equals(String.valueOf(c))
-                    && !"\'".equals(String.valueOf(c))) {
+            if (Character.isDigit(c) || Character.isLetter(c)) {
                 stringBuilder.append(String.valueOf(c));
             }
         }
