@@ -1,6 +1,6 @@
 package com.HaikuMasterTrainingDataProcessor.main;
 
-import com.HaikuMasterTrainingDataProcessor.database.TrainingDataDatabaseAccessor;
+
 import com.HaikuMasterTrainingDataProcessor.tagging.PosTagger;
 import com.HaikuMasterTrainingDataProcessor.tagging.PosTaggerImpl;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
@@ -17,8 +17,6 @@ import com.HaikuMasterTrainingDataProcessor.word2vec.util.StopWordsCache;
 import com.HaikuMasterTrainingDataProcessor.writer.TrainingDataRowWriter;
 import com.HaikuMasterTrainingDataProcessor.writer.TrainingDataRowWriterImpl;
 import org.apache.thrift.TException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 
 import java.io.IOException;
@@ -29,14 +27,13 @@ import java.util.*;
  */
 public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTrainingDataProcessor {
 
-    private ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
-    private TrainingDataDatabaseAccessor trainingDataDatabaseAccessor = (TrainingDataDatabaseAccessor) context.getBean("trainingDataDatabaseAccessor");
-
     private Word2VecAnalyser word2VecAnalyser = new Word2VecAnalyserImpl();
     private PosTagger posTagger = new PosTaggerImpl();
     private Word2VecMatchTrainingRowFactory word2VecMatchTrainingRowFactory = new Word2VecMatchTrainingRowFactoryImpl();
     private TrainingDataRowWriter trainingDataRowWriter = new TrainingDataRowWriterImpl();
     private Tokenizer tokenizer = new TokenizerImpl();
+    private String outputFilePathWord2Vec = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\Word2VecModelData.txt";
+    private String outputFilePathTokenTagData = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\TokenTagData.txt";
 
     public HaikuMasterTrainingDataProcessorImpl() throws IOException {
     }
@@ -51,7 +48,8 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
     public void process() throws InterruptedException, TException, IOException {
         Map<String, Set<String>> tokenTagDataCache = new HashMap<String, Set<String>>();
         Set<String> vectorDataCache = new HashSet<String>();
-        List<String> trainingDataRows = new ArrayList<>();
+        List<String> word2VecTrainingDataRows = new ArrayList<>();
+        List<String> tokenTagDataTrainingDataRows = new ArrayList<>();
         long startTime = System.currentTimeMillis();
         int numberOfTaggedWords = 0;
         int numberOfWord2VecWords = 0;
@@ -74,7 +72,8 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                     try {
                         if (tokenTagDataCache.containsKey(token)) {
                             if (!tokenTagDataCache.get(token).contains(tag)) {
-                                trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
+                                String tokenTagDataTrainingDataRow = token + "#" + tag;
+                                tokenTagDataTrainingDataRows.add(tokenTagDataTrainingDataRow);
                                 numberOfTaggedWords++;
                                 tokenTagDataCache.get(token).add(tag);
                             }
@@ -82,7 +81,8 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                             Set<String> tags = new HashSet<String>();
                             tags.add(tag);
                             tokenTagDataCache.put(token, tags);
-                            trainingDataDatabaseAccessor.insertTokenTagData(tokenTagData);
+                            String tokenTagDataTrainingDataRow = token + "#" + tag;
+                            tokenTagDataTrainingDataRows.add(tokenTagDataTrainingDataRow);
                             numberOfTaggedWords++;
                         }
                     } catch (CannotGetJdbcConnectionException ex) {
@@ -94,7 +94,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                             List<Word2VecSearcher.Match> matches = word2VecSearcher.getMatches(token, 11);
                             String trainingDataRow = word2VecMatchTrainingRowFactory.create(token, matches);
                             System.out.println(trainingDataRow);
-                            trainingDataRows.add(trainingDataRow);
+                            word2VecTrainingDataRows.add(trainingDataRow);
                             numberOfWord2VecWords++;
                         }
                     } catch (Word2VecSearcher.UnknownWordException e) {
@@ -103,7 +103,8 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                 }
             }
         }
-        trainingDataRowWriter.write(trainingDataRows);
+        trainingDataRowWriter.write(word2VecTrainingDataRows, outputFilePathWord2Vec);
+        trainingDataRowWriter.write(tokenTagDataTrainingDataRows, outputFilePathTokenTagData);
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         System.out.println("Data processed in " + (elapsedTime / 1000) / 60 + " minutes and "

@@ -8,6 +8,6 @@ import java.util.List;
  */
 public interface TrainingDataRowWriter {
 
-    void write(List<String> trainingDataRow) throws IOException;
+    void write(List<String> trainingDataRow, String outputFilePath) throws IOException;
 
 }

@@ -10,14 +10,12 @@ import java.util.List;
  */
 public class TrainingDataRowWriterImpl implements TrainingDataRowWriter {
 
-    private String outputFilePath = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\Word2VecModelData.txt";
-
     private BufferedWriter bw = null;
 
     private FileWriter fw = null;
 
     @Override
-    public void write(List<String> trainingDataRows) throws IOException {
+    public void write(List<String> trainingDataRows, String outputFilePath) throws IOException {
         fw = new FileWriter(outputFilePath, true);
         bw = new BufferedWriter(fw);
         System.out.println("Starting to write data...");
