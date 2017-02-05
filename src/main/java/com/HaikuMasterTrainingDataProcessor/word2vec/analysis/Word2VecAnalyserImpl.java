@@ -23,7 +23,7 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
 
     @Override
     public Word2VecModel analyseCBOW() throws InterruptedException, IOException, TException {
-        List<String> sentences = textReader.readText();
+        List<String> sentences = textReader.readPreprocessedData();
         List<List<String>> tokens = Lists.transform(sentences, new Function<String, List<String>>() {
             @Override
             public List<String> apply(String input) {
@@ -53,7 +53,7 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
 
     @Override
     public Word2VecModel analyseSkipgram() throws InterruptedException, IOException, TException {
-        List<String> sentences = textReader.readText();
+        List<String> sentences = textReader.readPreprocessedData();
         List<List<String>> tokens = Lists.transform(sentences, new Function<String, List<String>>() {
             @Override
             public List<String> apply(String input) {

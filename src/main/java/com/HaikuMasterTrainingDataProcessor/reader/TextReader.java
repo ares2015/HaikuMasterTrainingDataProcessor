@@ -1,5 +1,6 @@
 package com.HaikuMasterTrainingDataProcessor.reader;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -7,6 +8,8 @@ import java.util.List;
  */
 public interface TextReader {
 
-    List<String> readText();
+    List<String> readRawData() throws FileNotFoundException;
+
+    List<String> readPreprocessedData();
 
 }
