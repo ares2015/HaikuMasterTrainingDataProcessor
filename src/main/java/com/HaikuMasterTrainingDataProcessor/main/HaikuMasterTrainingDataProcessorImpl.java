@@ -15,7 +15,6 @@ import com.HaikuMasterTrainingDataProcessor.writer.TrainingDataWriter;
 import org.apache.thrift.TException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.jdbc.CannotGetJdbcConnectionException;
 
 import java.io.IOException;
 import java.util.*;
@@ -91,24 +90,20 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                             System.out.println(token);
                         }
                     }
-                    try {
-                        if (tokenTagDataCache.containsKey(token)) {
-                            if (!tokenTagDataCache.get(token).contains(tag)) {
-                                String tokenTagDataTrainingDataRow = token + "#" + tag;
-                                tokenTagDataTrainingDataRows.add(tokenTagDataTrainingDataRow);
-                                numberOfTaggedWords++;
-                                tokenTagDataCache.get(token).add(tag);
-                            }
-                        } else {
-                            Set<String> tags = new HashSet<String>();
-                            tags.add(tag);
-                            tokenTagDataCache.put(token, tags);
+                    if (tokenTagDataCache.containsKey(token)) {
+                        if (!tokenTagDataCache.get(token).contains(tag)) {
                             String tokenTagDataTrainingDataRow = token + "#" + tag;
                             tokenTagDataTrainingDataRows.add(tokenTagDataTrainingDataRow);
                             numberOfTaggedWords++;
+                            tokenTagDataCache.get(token).add(tag);
                         }
-                    } catch (CannotGetJdbcConnectionException ex) {
-                        System.out.println(ex);
+                    } else {
+                        Set<String> tags = new HashSet<String>();
+                        tags.add(tag);
+                        tokenTagDataCache.put(token, tags);
+                        String tokenTagDataTrainingDataRow = token + "#" + tag;
+                        tokenTagDataTrainingDataRows.add(tokenTagDataTrainingDataRow);
+                        numberOfTaggedWords++;
                     }
                     try {
                         if (!vectorDataCache.contains(token)) {
@@ -120,7 +115,6 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                             numberOfWord2VecWords++;
                         }
                     } catch (Word2VecSearcher.UnknownWordException e) {
-//                        e.printStackTrace();
                     }
                 }
             }
