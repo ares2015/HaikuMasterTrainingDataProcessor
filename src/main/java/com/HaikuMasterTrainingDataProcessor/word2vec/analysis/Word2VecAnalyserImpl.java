@@ -67,7 +67,7 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
                 .setWindowSize(7)
                 .type(NeuralNetworkType.SKIP_GRAM)
                 .useHierarchicalSoftmax()
-                .setLayerSize(300)
+                .setLayerSize(200)
                 .useNegativeSamples(0)
                 .setDownSamplingRate(1e-3)
                 .setNumIterations(5)
@@ -78,7 +78,7 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
                     }
                 })
                 .train(tokens);
-
+        model.setSentences(sentences);
         return model;
     }
 }

@@ -1,5 +1,6 @@
 package com.HaikuMasterTrainingDataProcessor.reader;
 
+import com.HaikuMasterTrainingDataProcessor.preprocessor.data.BookData;
 import com.HaikuMasterTrainingDataProcessor.tokenizing.Tokenizer;
 import com.HaikuMasterTrainingDataProcessor.tokenizing.TokenizerImpl;
 
@@ -19,10 +20,11 @@ public class TextReaderImpl implements TextReader {
     private Tokenizer tokenizer = new TokenizerImpl();
 
     @Override
-    public List<String> readRawData() throws FileNotFoundException {
+    public BookData readRawData() throws FileNotFoundException {
         List<String> sentences = null;
         String wholeText = "";
         BufferedReader br = null;
+        String title = "";
         try {
             br = new BufferedReader(new FileReader("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\TextData.txt"));
         } catch (final FileNotFoundException e) {
@@ -31,6 +33,14 @@ public class TextReaderImpl implements TextReader {
         try {
             String testDataRow = br.readLine();
             while (testDataRow != null) {
+                if (testDataRow.contains("Title:")) {
+                    String[] split = testDataRow.split("Title:");
+                    title += split[1];
+                }
+                if (testDataRow.contains("Author:")) {
+                    String[] split = testDataRow.split("Author:");
+                    title += " - " + split[1];
+                }
                 if (!"".equals(testDataRow)) {
                     wholeText += testDataRow;
                     wholeText += " ";
@@ -44,9 +54,11 @@ public class TextReaderImpl implements TextReader {
         }
         PrintWriter pw = new PrintWriter("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\TextData.txt");
         pw.close();
-        return sentences;
+        BookData bookData = new BookData(title, sentences);
+        return bookData;
     }
 
+    @Override
     public List<String> readPreprocessedData() {
         List<String> sentences = new ArrayList<>();
         BufferedReader br = null;

@@ -17,7 +17,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
@@ -61,7 +60,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
     }
 
     @Override
-    public void preprocess() throws FileNotFoundException {
+    public void preprocess() throws IOException {
         trainingDataPreprocessor.preprocess();
     }
 
@@ -74,10 +73,12 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
         long startTime = System.currentTimeMillis();
         int numberOfTaggedWords = 0;
         int numberOfWord2VecWords = 0;
-        Word2VecModel word2VecModel = word2VecAnalyser.analyseCBOW();
+        int numberOfSentences = 0;
+        Word2VecModel word2VecModel = word2VecAnalyser.analyseSkipgram();
         Word2VecSearcher word2VecSearcher = new Word2VecSearcherImpl(word2VecModel);
         Iterable<String> sentences = word2VecModel.getSentences();
         for (String sentence : sentences) {
+            numberOfSentences++;
             List<TokenTagData> tokenTagDataList = posTagger.tag(sentence);
             for (TokenTagData tokenTagData : tokenTagDataList) {
                 String token = tokenTagData.getToken();
@@ -128,7 +129,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
         trainingDataWriter.writeAnalysedData(tokenTagDataTrainingDataRows, outputFilePathTokenTagData);
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
-        System.out.println("Data processed in " + (elapsedTime / 1000) / 60 + " minutes and "
+        System.out.println(numberOfSentences + " sentences processed in " + (elapsedTime / 1000) / 60 + " minutes and "
                 + +(elapsedTime / 1000) % 60 + " seconds");
         System.out.println(numberOfTaggedWords + " token tags were added into tags model");
         System.out.println(numberOfWord2VecWords + " tokens were added into word2vec model");

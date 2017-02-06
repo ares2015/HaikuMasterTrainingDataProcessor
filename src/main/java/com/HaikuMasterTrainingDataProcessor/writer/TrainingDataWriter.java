@@ -1,5 +1,7 @@
 package com.HaikuMasterTrainingDataProcessor.writer;
 
+import com.HaikuMasterTrainingDataProcessor.preprocessor.data.BookData;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -8,7 +10,9 @@ import java.util.List;
  */
 public interface TrainingDataWriter {
 
-    void writePreprocessedData(List<String> sentences);
+    void writePreprocessedDataIntoAnalysisFile(List<String> sentences);
+
+    void writePreprocessedDataIntoBooksDirectory(BookData bookData) throws IOException;
 
     void writeAnalysedData(List<String> trainingDataRow, String outputFilePath) throws IOException;
 
