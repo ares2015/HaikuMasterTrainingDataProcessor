@@ -1,6 +1,7 @@
 package com.HaikuMasterTrainingDataProcessor.main;
 
 
+import com.HaikuMasterTrainingDataProcessor.database.TrainingDataDatabaseAccessor;
 import com.HaikuMasterTrainingDataProcessor.preprocessor.TrainingDataPreprocessor;
 import com.HaikuMasterTrainingDataProcessor.tagging.PosTagger;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
@@ -24,6 +25,8 @@ import java.util.*;
  */
 public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTrainingDataProcessor {
 
+    private TrainingDataDatabaseAccessor trainingDataDatabaseAccessor;
+
     private TrainingDataPreprocessor trainingDataPreprocessor;
 
     private Tokenizer tokenizer;
@@ -40,9 +43,10 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
     private String outputFilePathWord2Vec = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\Word2VecModelData.txt";
     private String outputFilePathTokenTagData = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\TokenTagData.txt";
 
-    public HaikuMasterTrainingDataProcessorImpl(TrainingDataPreprocessor trainingDataPreprocessor, Tokenizer tokenizer,
+    public HaikuMasterTrainingDataProcessorImpl(TrainingDataDatabaseAccessor trainingDataDatabaseAccessor, TrainingDataPreprocessor trainingDataPreprocessor, Tokenizer tokenizer,
                                                 TrainingDataWriter trainingDataWriter, PosTagger posTagger, Word2VecMatchTrainingRowFactory word2VecMatchTrainingRowFactory,
                                                 Word2VecAnalyser word2VecAnalyser) {
+        this.trainingDataDatabaseAccessor = trainingDataDatabaseAccessor;
         this.trainingDataPreprocessor = trainingDataPreprocessor;
         this.tokenizer = tokenizer;
         this.trainingDataWriter = trainingDataWriter;
@@ -75,7 +79,8 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
         int numberOfSentences = 0;
         Word2VecModel word2VecModel = word2VecAnalyser.analyseSkipgram();
         Word2VecSearcher word2VecSearcher = new Word2VecSearcherImpl(word2VecModel);
-        Iterable<String> sentences = word2VecModel.getSentences();
+        List<String> sentences = word2VecModel.getSentences();
+        trainingDataDatabaseAccessor.insertNumberOfSentences(sentences.size());
         for (String sentence : sentences) {
             numberOfSentences++;
             List<TokenTagData> tokenTagDataList = posTagger.tag(sentence);

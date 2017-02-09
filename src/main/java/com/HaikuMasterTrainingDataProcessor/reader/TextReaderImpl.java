@@ -16,7 +16,6 @@ public class TextReaderImpl implements TextReader {
 
     private String inputFilePath = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTextData.txt";
 
-
     private Tokenizer tokenizer = new TokenizerImpl();
 
     @Override
