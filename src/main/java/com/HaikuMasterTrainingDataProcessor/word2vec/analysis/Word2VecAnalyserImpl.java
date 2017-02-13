@@ -39,14 +39,14 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
         });
 
         Word2VecModel model = Word2VecModel.trainer()
-                .setMinVocabFrequency(20)
+                .setMinVocabFrequency(5)
                 .useNumThreads(20)
                 .setWindowSize(8)
                 .type(NeuralNetworkType.CBOW)
-                .setLayerSize(300)
+                .setLayerSize(400)
                 .useNegativeSamples(25)
                 .setDownSamplingRate(1e-4)
-                .setNumIterations(10)
+                .setNumIterations(15)
                 .setListener(new Word2VecTrainerBuilder.TrainingProgressListener() {
                     @Override
                     public void update(Stage stage, double progress) {
@@ -77,10 +77,10 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
                 .setWindowSize(7)
                 .type(NeuralNetworkType.SKIP_GRAM)
                 .useHierarchicalSoftmax()
-                .setLayerSize(300)
+                .setLayerSize(400)
                 .useNegativeSamples(5)
                 .setDownSamplingRate(1e-3)
-                .setNumIterations(5)
+                .setNumIterations(15)
                 .setListener(new Word2VecTrainerBuilder.TrainingProgressListener() {
                     @Override
                     public void update(Word2VecTrainerBuilder.TrainingProgressListener.Stage stage, double progress) {

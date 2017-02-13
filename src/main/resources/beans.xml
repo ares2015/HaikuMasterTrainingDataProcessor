@@ -62,7 +62,6 @@
         <constructor-arg ref="trainingDataPreprocessor"/>
         <constructor-arg ref="tokenizer"/>
         <constructor-arg ref="writer"/>
-        <constructor-arg ref="tagger"/>
         <constructor-arg ref="word2vecMatchTrainingRowFactory"/>
         <constructor-arg ref="word2vecAnalyser"/>
     </bean>
