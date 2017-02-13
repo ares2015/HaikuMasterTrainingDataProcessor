@@ -1,5 +1,11 @@
 package word2vec;
 
+import com.HaikuMasterTrainingDataProcessor.processor.SentencesProcessor;
+import com.HaikuMasterTrainingDataProcessor.processor.SentencesProcessorImpl;
+import com.HaikuMasterTrainingDataProcessor.tagging.PosTagger;
+import com.HaikuMasterTrainingDataProcessor.tagging.PosTaggerImpl;
+import com.HaikuMasterTrainingDataProcessor.tokenizing.Tokenizer;
+import com.HaikuMasterTrainingDataProcessor.tokenizing.TokenizerImpl;
 import com.HaikuMasterTrainingDataProcessor.word2vec.analysis.Word2VecAnalyser;
 import com.HaikuMasterTrainingDataProcessor.word2vec.analysis.Word2VecAnalyserImpl;
 import com.HaikuMasterTrainingDataProcessor.word2vec.model.Word2VecModel;
@@ -19,7 +25,14 @@ import static org.junit.Assert.assertTrue;
 public class Word2VecTest {
 
     String inputFilePath = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTextData.txt";
-    Word2VecAnalyser word2VecAnalyser = new Word2VecAnalyserImpl();
+
+    Tokenizer tokenizer = new TokenizerImpl();
+
+    PosTagger posTagger = new PosTaggerImpl();
+
+    SentencesProcessor sentencesProcessor = new SentencesProcessorImpl(tokenizer, posTagger);
+
+    Word2VecAnalyser word2VecAnalyser = new Word2VecAnalyserImpl(sentencesProcessor);
 
 
     @Test

@@ -2,6 +2,7 @@ package tagging;
 
 import com.HaikuMasterTrainingDataProcessor.tagging.PosTagger;
 import com.HaikuMasterTrainingDataProcessor.tagging.PosTaggerImpl;
+import com.HaikuMasterTrainingDataProcessor.tagging.data.SentenceData;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
 import org.junit.Test;
 
@@ -18,7 +19,8 @@ public class PosTaggerTest {
     public void testTag(){
         PosTagger posTagger = new PosTaggerImpl();
         String sentence = "Donald Trump defeated Hillary Clinton heavily in US presidential elections in November 2016";
-        List<TokenTagData> tokenTagDataList = posTagger.tag(sentence);
+        SentenceData sentenceData = posTagger.tag(sentence);
+        List<TokenTagData> tokenTagDataList = sentenceData.getTokenTagDataList();
         assertTrue(tokenTagDataList.size() > 0);
         assertTrue(tokenTagDataList.get(0).isNoun());
         assertTrue(tokenTagDataList.get(1).isNoun());
@@ -30,5 +32,6 @@ public class PosTaggerTest {
         assertTrue(tokenTagDataList.get(7).isAdjective());
         assertTrue(tokenTagDataList.get(8).isNoun());
         assertTrue(tokenTagDataList.get(9).isNoun());
+        System.out.println(sentenceData.getTaggedSentence());
     }
 }

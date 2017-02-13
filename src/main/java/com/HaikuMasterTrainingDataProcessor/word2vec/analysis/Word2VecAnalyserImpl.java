@@ -1,7 +1,8 @@
 package com.HaikuMasterTrainingDataProcessor.word2vec.analysis;
 
-import com.HaikuMasterTrainingDataProcessor.reader.TextReader;
-import com.HaikuMasterTrainingDataProcessor.reader.TextReaderImpl;
+import com.HaikuMasterTrainingDataProcessor.processor.SentencesProcessor;
+import com.HaikuMasterTrainingDataProcessor.tagging.data.SentencesData;
+import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
 import com.HaikuMasterTrainingDataProcessor.word2vec.model.Word2VecModel;
 import com.HaikuMasterTrainingDataProcessor.word2vec.neuralnetwork.NeuralNetworkType;
 import com.HaikuMasterTrainingDataProcessor.word2vec.training.Word2VecTrainerBuilder;
@@ -19,11 +20,17 @@ import java.util.List;
  */
 public class Word2VecAnalyserImpl implements Word2VecAnalyser {
 
-    private TextReader textReader = new TextReaderImpl();
+    private SentencesProcessor sentencesProcessor;
+
+    public Word2VecAnalyserImpl(SentencesProcessor sentencesProcessor) {
+        this.sentencesProcessor = sentencesProcessor;
+    }
 
     @Override
     public Word2VecModel analyseCBOW() throws InterruptedException, IOException, TException {
-        List<String> sentences = textReader.readPreprocessedData();
+        SentencesData sentencesData = sentencesProcessor.process();
+        List<String> sentences = sentencesData.getSentences();
+        List<List<TokenTagData>> tokenTagDataMultiList = sentencesData.getTokenTagDataMultiList();
         List<List<String>> tokens = Lists.transform(sentences, new Function<String, List<String>>() {
             @Override
             public List<String> apply(String input) {
@@ -32,14 +39,14 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
         });
 
         Word2VecModel model = Word2VecModel.trainer()
-                .setMinVocabFrequency(5)
+                .setMinVocabFrequency(20)
                 .useNumThreads(20)
                 .setWindowSize(8)
                 .type(NeuralNetworkType.CBOW)
-                .setLayerSize(200)
+                .setLayerSize(300)
                 .useNegativeSamples(25)
                 .setDownSamplingRate(1e-4)
-                .setNumIterations(5)
+                .setNumIterations(10)
                 .setListener(new Word2VecTrainerBuilder.TrainingProgressListener() {
                     @Override
                     public void update(Stage stage, double progress) {
@@ -48,12 +55,15 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
                 })
                 .train(tokens);
         model.setSentences(sentences);
+        model.setTokenTagDataMultiList(tokenTagDataMultiList);
         return model;
     }
 
     @Override
     public Word2VecModel analyseSkipgram() throws InterruptedException, IOException, TException {
-        List<String> sentences = textReader.readPreprocessedData();
+        SentencesData sentencesData = sentencesProcessor.process();
+        List<String> sentences = sentencesData.getSentences();
+        List<List<TokenTagData>> tokenTagDataMultiList = sentencesData.getTokenTagDataMultiList();
         List<List<String>> tokens = Lists.transform(sentences, new Function<String, List<String>>() {
             @Override
             public List<String> apply(String input) {
@@ -67,8 +77,8 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
                 .setWindowSize(7)
                 .type(NeuralNetworkType.SKIP_GRAM)
                 .useHierarchicalSoftmax()
-                .setLayerSize(200)
-                .useNegativeSamples(0)
+                .setLayerSize(300)
+                .useNegativeSamples(5)
                 .setDownSamplingRate(1e-3)
                 .setNumIterations(5)
                 .setListener(new Word2VecTrainerBuilder.TrainingProgressListener() {
@@ -79,6 +89,7 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
                 })
                 .train(tokens);
         model.setSentences(sentences);
+        model.setTokenTagDataMultiList(tokenTagDataMultiList);
         return model;
     }
 }

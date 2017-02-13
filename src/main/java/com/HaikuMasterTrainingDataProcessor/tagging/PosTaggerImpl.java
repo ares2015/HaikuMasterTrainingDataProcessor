@@ -1,7 +1,9 @@
 package com.HaikuMasterTrainingDataProcessor.tagging;
 
 import com.HaikuMasterTrainingDataProcessor.tagging.cache.TagsCache;
+import com.HaikuMasterTrainingDataProcessor.tagging.data.SentenceData;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
+import com.HaikuMasterTrainingDataProcessor.word2vec.util.StopWordsCache;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
@@ -28,7 +30,10 @@ public class PosTaggerImpl implements PosTagger {
     }
 
     @Override
-    public List<TokenTagData> tag(String inputSentence) {
+    public SentenceData tag(String inputSentence) {
+        SentenceData sentenceData = new SentenceData();
+        StringBuilder sentence = new StringBuilder();
+        sentence.append("");
         List<TokenTagData> tokenTagDataList = new ArrayList<>();
         Annotation annotation = new Annotation(inputSentence);
         pipeline.annotate(annotation);
@@ -37,14 +42,19 @@ public class PosTaggerImpl implements PosTagger {
             for (CoreLabel token : processedSentence.get(CoreAnnotations.TokensAnnotation.class)) {
                 String word = token.get(CoreAnnotations.TextAnnotation.class);
                 String tag = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
-                if (TagsCache.tags.contains(tag)) {
+                if (TagsCache.tags.contains(tag) && !StopWordsCache.stopWordsCache.contains(word)) {
                     TokenTagData tokenTagData = new TokenTagData(word, TagsCache.nounTags.contains(tag), TagsCache.adjectiveTags.contains(tag),
                             TagsCache.verbTags.contains(tag), TagsCache.adverbTags.contains(tag), TagsCache.tagsConversionMap.get(tag));
                     tokenTagDataList.add(tokenTagData);
+                    sentence.append(word);
+                    sentence.append(" ");
                 }
             }
         }
-
-        return tokenTagDataList;
+        sentenceData.setTokenTagDataList(tokenTagDataList);
+        sentenceData.setTaggedSentence(sentence.toString());
+        return sentenceData;
     }
+
+
 }

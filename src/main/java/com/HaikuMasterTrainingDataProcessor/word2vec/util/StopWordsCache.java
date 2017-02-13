@@ -148,6 +148,5 @@ public final class StopWordsCache {
         stopWordsCache.add("there");
         stopWordsCache.add("here");
 
-
     }
 }
