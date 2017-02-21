@@ -45,6 +45,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
         this.trainingDataPreprocessor = trainingDataPreprocessor;
         this.tokenizer = tokenizer;
         this.trainingDataWriter = trainingDataWriter;
+
         this.word2VecMatchTrainingRowFactory = word2VecMatchTrainingRowFactory;
         this.word2VecAnalyser = word2VecAnalyser;
     }
@@ -106,7 +107,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                 try {
                     if (!vectorDataCache.contains(token)) {
                         vectorDataCache.add(token);
-                        List<Word2VecSearcher.Match> matches = word2VecSearcher.getMatches(token, 51);
+                        List<Word2VecSearcher.Match> matches = word2VecSearcher.getMatches(token, 310);
                         String trainingDataRow = word2VecMatchTrainingRowFactory.create(token, matches);
                         System.out.println(trainingDataRow);
                         word2VecTrainingDataRows.add(trainingDataRow);
