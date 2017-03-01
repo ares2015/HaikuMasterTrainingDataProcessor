@@ -39,9 +39,9 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
         });
 
         Word2VecModel model = Word2VecModel.trainer()
-                .setMinVocabFrequency(5)
+                .setMinVocabFrequency(20)
                 .useNumThreads(20)
-                .setWindowSize(8)
+                .setWindowSize(5)
                 .type(NeuralNetworkType.CBOW)
                 .setLayerSize(310)
                 .useHierarchicalSoftmax()
@@ -73,7 +73,7 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
         });
 
         Word2VecModel model = Word2VecModel.trainer()
-                .setMinVocabFrequency(2)
+                .setMinVocabFrequency(20)
                 .useNumThreads(20)
                 .setWindowSize(5)
                 .type(NeuralNetworkType.SKIP_GRAM)

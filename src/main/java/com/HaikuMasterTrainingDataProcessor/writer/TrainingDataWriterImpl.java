@@ -17,7 +17,7 @@ public class TrainingDataWriterImpl implements TrainingDataWriter {
 
     private FileWriter fw = null;
 
-    private final String FILENAME = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTextData.txt";
+    private final String FILENAME = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTrainingData\\HaikuMasterTextData.txt";
 
     @Override
     public void writePreprocessedDataIntoAnalysisFile(List<String> sentences) {
@@ -49,7 +49,7 @@ public class TrainingDataWriterImpl implements TrainingDataWriter {
 
     @Override
     public void writePreprocessedDataIntoBooksDirectory(BookData bookData) throws IOException {
-        File file = new File("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\books\\" + bookData.getTitle()+".txt");
+        File file = new File("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTrainingData\\books\\" + bookData.getTitle() + ".txt");
         file.createNewFile();
         file.getAbsolutePath();
         BufferedWriter bw = null;

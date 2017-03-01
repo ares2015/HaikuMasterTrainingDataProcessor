@@ -35,8 +35,8 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
 
     private Word2VecAnalyser word2VecAnalyser;
 
-    private String outputFilePathWord2Vec = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\Word2VecModelData.txt";
-    private String outputFilePathTokenTagData = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\TokenTagData.txt";
+    private String outputFilePathWord2Vec = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTrainingData\\Word2VecModelData.txt";
+    private String outputFilePathTokenTagData = "C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTrainingData\\TokenTagData.txt";
 
     public HaikuMasterTrainingDataProcessorImpl(TrainingDataDatabaseAccessor trainingDataDatabaseAccessor, TrainingDataPreprocessor trainingDataPreprocessor, Tokenizer tokenizer,
                                                 TrainingDataWriter trainingDataWriter, Word2VecMatchTrainingRowFactory word2VecMatchTrainingRowFactory,

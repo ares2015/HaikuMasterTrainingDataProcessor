@@ -33,7 +33,7 @@ public class SentencesProcessorImpl implements SentencesProcessor {
         List<String> sentences = new ArrayList<>();
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new FileReader("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTextData.txt"));
+            br = new BufferedReader(new FileReader("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTrainingData\\HaikuMasterTextData.txt"));
         } catch (final FileNotFoundException e) {
             e.printStackTrace();
         }
