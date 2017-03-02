@@ -1,5 +1,7 @@
 package com.HaikuMasterTrainingDataProcessor.tagging;
 
+import com.HaikuMasterTrainingDataProcessor.morphology.MorphologicalProcessor;
+import com.HaikuMasterTrainingDataProcessor.morphology.MorphologicalProcessorImpl;
 import com.HaikuMasterTrainingDataProcessor.tagging.cache.TagsCache;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.SentenceData;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
@@ -23,10 +25,13 @@ public class PosTaggerImpl implements PosTagger {
 
     private StanfordCoreNLP pipeline;
 
+    private MorphologicalProcessor morphologicalProcessor;
+
     public PosTaggerImpl() {
         props = new Properties();
         props.setProperty("annotators", "tokenize, ssplit, pos");
         pipeline = new StanfordCoreNLP(props);
+        morphologicalProcessor = new MorphologicalProcessorImpl();
     }
 
     @Override
@@ -43,6 +48,9 @@ public class PosTaggerImpl implements PosTagger {
                 String word = token.get(CoreAnnotations.TextAnnotation.class);
                 String tag = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
                 if (TagsCache.tags.contains(tag) && !StopWordsCache.stopWordsCache.contains(word)) {
+                    if (TagsCache.verbTags.contains(tag) && ((word.endsWith("ing") || word.endsWith("ed")))) {
+                        word = morphologicalProcessor.removeSuffix(word);
+                    }
                     TokenTagData tokenTagData = new TokenTagData(word, TagsCache.nounTags.contains(tag), TagsCache.adjectiveTags.contains(tag),
                             TagsCache.verbTags.contains(tag), TagsCache.adverbTags.contains(tag), TagsCache.tagsConversionMap.get(tag));
                     tokenTagDataList.add(tokenTagData);
@@ -55,6 +63,5 @@ public class PosTaggerImpl implements PosTagger {
         sentenceData.setTaggedSentence(sentence.toString());
         return sentenceData;
     }
-
 
 }
