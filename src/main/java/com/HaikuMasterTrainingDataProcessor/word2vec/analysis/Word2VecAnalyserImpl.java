@@ -39,13 +39,14 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
         });
 
         Word2VecModel model = Word2VecModel.trainer()
-                .setMinVocabFrequency(20)
+                .setMinVocabFrequency(30)
                 .useNumThreads(20)
                 .setWindowSize(5)
                 .type(NeuralNetworkType.CBOW)
-                .setLayerSize(310)
+                .setLayerSize(510)
                 .useHierarchicalSoftmax()
                 .useNegativeSamples(25)
+                .useHierarchicalSoftmax()
                 .setDownSamplingRate(1e-4)
                 .setNumIterations(15)
                 .setListener(new Word2VecTrainerBuilder.TrainingProgressListener() {
@@ -78,7 +79,7 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
                 .setWindowSize(5)
                 .type(NeuralNetworkType.SKIP_GRAM)
                 .useHierarchicalSoftmax()
-                .setLayerSize(310)
+                .setLayerSize(510)
                 .useNegativeSamples(5)
                 .setDownSamplingRate(1e-3)
                 .setNumIterations(15)

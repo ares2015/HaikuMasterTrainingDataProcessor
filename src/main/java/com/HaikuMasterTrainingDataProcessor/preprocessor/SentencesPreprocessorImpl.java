@@ -37,12 +37,11 @@ public class SentencesPreprocessorImpl implements SentencesPreprocessor {
             System.out.println("Entering sentence preprocessor...");
             String sentence = br.readLine();
             while (sentence != null) {
-                String preprocessedSentence = "";
                 if (!"".equals(sentence)) {
                     SentenceData sentenceData = posTagger.tag(sentence);
                     String taggedSentence = sentenceData.getTaggedSentence();
                     if (!"".equals(taggedSentence)) {
-                        sentences.add(preprocessedSentence);
+                        sentences.add(taggedSentence);
                         tokenTagDataMultiList.add(sentenceData.getTokenTagDataList());
                         System.out.println("Tagging sentence: " + sentence);
                     }

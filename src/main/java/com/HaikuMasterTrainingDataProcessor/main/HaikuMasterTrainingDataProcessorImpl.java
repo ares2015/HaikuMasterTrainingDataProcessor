@@ -71,7 +71,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
         long startTime = System.currentTimeMillis();
         int numberOfTaggedWords = 0;
         int numberOfWord2VecWords = 0;
-        Word2VecModel word2VecModel = word2VecAnalyser.analyseSkipgram();
+        Word2VecModel word2VecModel = word2VecAnalyser.analyseCBOW();
         Word2VecSearcher word2VecSearcher = new Word2VecSearcherImpl(word2VecModel);
         List<String> sentences = word2VecModel.getSentences();
         List<List<TokenTagData>> tokenTagDataMultiList = word2VecModel.getTokenTagDataMultiList();
@@ -81,12 +81,12 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
             for (int j = 0; j < tokenTagDataList.size(); j++) {
                 String token = tokenTagDataList.get(j).getToken();
                 String tag = tokenTagDataList.get(j).getTag();
-                if (!tokenizer.isLowerCase(token)) {
-                    try {
+                try {
+                    if (!tokenizer.isLowerCase(token)) {
                         token = tokenizer.decapitalize(token);
-                    } catch (StringIndexOutOfBoundsException e) {
-                        System.out.println(token);
                     }
+                } catch (StringIndexOutOfBoundsException e) {
+                    System.out.println(token);
                 }
                 if (tokenTagDataCache.containsKey(token)) {
                     if (!tokenTagDataCache.get(token).contains(tag)) {
@@ -107,7 +107,7 @@ public class HaikuMasterTrainingDataProcessorImpl implements HaikuMasterTraining
                 try {
                     if (!vectorDataCache.contains(token)) {
                         vectorDataCache.add(token);
-                        List<Word2VecSearcher.Match> matches = word2VecSearcher.getMatches(token, 310);
+                        List<Word2VecSearcher.Match> matches = word2VecSearcher.getMatches(token, 500);
                         String trainingDataRow = word2VecMatchTrainingRowFactory.create(token, matches);
                         System.out.println(trainingDataRow);
                         word2VecTrainingDataRows.add(trainingDataRow);
