@@ -1,10 +1,9 @@
-package com.HaikuMasterTrainingDataProcessor.processor;
+package com.HaikuMasterTrainingDataProcessor.preprocessor;
 
 import com.HaikuMasterTrainingDataProcessor.tagging.PosTagger;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.SentenceData;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.SentencesData;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
-import com.HaikuMasterTrainingDataProcessor.tokenizing.Tokenizer;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -16,19 +15,16 @@ import java.util.List;
 /**
  * Created by Oliver on 2/13/2017.
  */
-public class SentencesProcessorImpl implements SentencesProcessor {
-
-    private Tokenizer tokenizer;
+public class SentencesPreprocessorImpl implements SentencesPreprocessor {
 
     private PosTagger posTagger;
 
-    public SentencesProcessorImpl(Tokenizer tokenizer, PosTagger posTagger) {
-        this.tokenizer = tokenizer;
+    public SentencesPreprocessorImpl(PosTagger posTagger) {
         this.posTagger = posTagger;
     }
 
     @Override
-    public SentencesData process() {
+    public SentencesData preprocess() {
         List<List<TokenTagData>> tokenTagDataMultiList = new ArrayList<>();
         List<String> sentences = new ArrayList<>();
         BufferedReader br = null;
@@ -41,13 +37,12 @@ public class SentencesProcessorImpl implements SentencesProcessor {
             System.out.println("Entering sentence preprocessor...");
             String sentence = br.readLine();
             while (sentence != null) {
-                String processedSentence = "";
+                String preprocessedSentence = "";
                 if (!"".equals(sentence)) {
                     SentenceData sentenceData = posTagger.tag(sentence);
                     String taggedSentence = sentenceData.getTaggedSentence();
                     if (!"".equals(taggedSentence)) {
-                        processedSentence = processSentence(taggedSentence);
-                        sentences.add(processedSentence);
+                        sentences.add(preprocessedSentence);
                         tokenTagDataMultiList.add(sentenceData.getTokenTagDataList());
                         System.out.println("Tagging sentence: " + sentence);
                     }
@@ -58,42 +53,6 @@ public class SentencesProcessorImpl implements SentencesProcessor {
             e.printStackTrace();
         }
         return new SentencesData(sentences, tokenTagDataMultiList);
-    }
-
-    private String processSentence(String sentence) {
-        String[] tokTmp;
-        tokTmp = sentence.split("\\ ");
-        List<String> preprocessedTokens = new ArrayList<>();
-        for (String token : tokTmp) {
-            token = tokenizer.removeSpecialCharacters(token);
-            preprocessedTokens.add(token);
-        }
-        final List<String> tokens = removeEmptyStringInSentence(preprocessedTokens);
-        return convertListToString(tokens);
-    }
-
-    private List<String> removeEmptyStringInSentence(List<String> filteredTokens) {
-        final List<String> listTokens = new ArrayList<String>();
-        for (final String token : filteredTokens) {
-            if (!token.equals("")) {
-                listTokens.add(token);
-            }
-        }
-        return listTokens;
-    }
-
-    private String convertListToString(List<String> list) {
-        String newString = "";
-        int i = 0;
-        for (String word : list) {
-            if (i < list.size() - 1) {
-                newString += word + " ";
-            } else {
-                newString += word;
-            }
-            i++;
-        }
-        return newString;
     }
 
 }

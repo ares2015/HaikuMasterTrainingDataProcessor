@@ -1,7 +1,7 @@
 package word2vec;
 
-import com.HaikuMasterTrainingDataProcessor.processor.SentencesProcessor;
-import com.HaikuMasterTrainingDataProcessor.processor.SentencesProcessorImpl;
+import com.HaikuMasterTrainingDataProcessor.preprocessor.SentencesPreprocessor;
+import com.HaikuMasterTrainingDataProcessor.preprocessor.SentencesPreprocessorImpl;
 import com.HaikuMasterTrainingDataProcessor.tagging.PosTagger;
 import com.HaikuMasterTrainingDataProcessor.tagging.PosTaggerImpl;
 import com.HaikuMasterTrainingDataProcessor.tokenizing.Tokenizer;
@@ -30,9 +30,9 @@ public class Word2VecTest {
 
     PosTagger posTagger = new PosTaggerImpl();
 
-    SentencesProcessor sentencesProcessor = new SentencesProcessorImpl(tokenizer, posTagger);
+    SentencesPreprocessor sentencesPreprocessor = new SentencesPreprocessorImpl(posTagger);
 
-    Word2VecAnalyser word2VecAnalyser = new Word2VecAnalyserImpl(sentencesProcessor);
+    Word2VecAnalyser word2VecAnalyser = new Word2VecAnalyserImpl(sentencesPreprocessor);
 
 
     @Test

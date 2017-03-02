@@ -1,6 +1,6 @@
 package com.HaikuMasterTrainingDataProcessor.word2vec.analysis;
 
-import com.HaikuMasterTrainingDataProcessor.processor.SentencesProcessor;
+import com.HaikuMasterTrainingDataProcessor.preprocessor.SentencesPreprocessor;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.SentencesData;
 import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
 import com.HaikuMasterTrainingDataProcessor.word2vec.model.Word2VecModel;
@@ -20,15 +20,15 @@ import java.util.List;
  */
 public class Word2VecAnalyserImpl implements Word2VecAnalyser {
 
-    private SentencesProcessor sentencesProcessor;
+    private SentencesPreprocessor sentencesPreprocessor;
 
-    public Word2VecAnalyserImpl(SentencesProcessor sentencesProcessor) {
-        this.sentencesProcessor = sentencesProcessor;
+    public Word2VecAnalyserImpl(SentencesPreprocessor sentencesPreprocessor) {
+        this.sentencesPreprocessor = sentencesPreprocessor;
     }
 
     @Override
     public Word2VecModel analyseCBOW() throws InterruptedException, IOException, TException {
-        SentencesData sentencesData = sentencesProcessor.process();
+        SentencesData sentencesData = sentencesPreprocessor.preprocess();
         List<String> sentences = sentencesData.getSentences();
         List<List<TokenTagData>> tokenTagDataMultiList = sentencesData.getTokenTagDataMultiList();
         List<List<String>> tokens = Lists.transform(sentences, new Function<String, List<String>>() {
@@ -62,7 +62,7 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
 
     @Override
     public Word2VecModel analyseSkipgram() throws InterruptedException, IOException, TException {
-        SentencesData sentencesData = sentencesProcessor.process();
+        SentencesData sentencesData = sentencesPreprocessor.preprocess();
         List<String> sentences = sentencesData.getSentences();
         List<List<TokenTagData>> tokenTagDataMultiList = sentencesData.getTokenTagDataMultiList();
         List<List<String>> tokens = Lists.transform(sentences, new Function<String, List<String>>() {

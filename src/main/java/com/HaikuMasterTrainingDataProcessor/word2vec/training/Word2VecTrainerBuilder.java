@@ -32,7 +32,7 @@ import java.util.Map;
  * 		<ul>
  *			<li> The original version assumes that sentences are delimited by newline characters and injects a sentence
  *				boundary per 1000 non-filtered tokens, i.e. valid token by the vocabulary and not removed by the randomized
- *				sampling process.  Java port mimics this behavior for now ...
+ *				sampling preprocess.  Java port mimics this behavior for now ...
  *			<li> When the original version encounters an empty line in the input file, it re-processes the first word of the
  *				last non-empty line with a sentence length of 0 and updates the random value.  Java port omits this behavior.
  * 		</ul>

@@ -156,8 +156,8 @@ public class ProfilingTimer implements AC {
 	private final ByteArrayOutputStream serializationOutput;
 
 	/**
-	 * Starts a new profiling timer with the given process name (optional arguments can be used as in {@link String#format(String, Object...)}).
-	 * When this {@link AC} is closed the profiling information will be dumped on the given log.
+     * Starts a new profiling timer with the given preprocess name (optional arguments can be used as in {@link String#format(String, Object...)}).
+     * When this {@link AC} is closed the profiling information will be dumped on the given log.
 	 *
 	 * Note that this method obeys the static {@link #topLevelInfoOnly}
 	 *

@@ -33,7 +33,7 @@ public class SentenceFilterImpl implements SentenceFilter {
     private List<String> filterEmptyStrings(List<String> filteredTokens) {
         final List<String> listTokens = new ArrayList<String>();
         for (final String token : filteredTokens) {
-            if (!token.equals("")) {
+            if (!token.equals("") && !"'".equals(token) && !"’".equals(token) && !",".equals(token)) {
                 listTokens.add(token);
             }
         }

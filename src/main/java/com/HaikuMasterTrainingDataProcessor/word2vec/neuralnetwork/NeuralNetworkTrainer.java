@@ -193,9 +193,11 @@ public abstract class NeuralNetworkTrainer {
 			}
 		};
 	}
-	
-	/** @return {@link Worker} to process the given sentences */
-	abstract Worker createWorker(int randomSeed, int iter, Iterable<List<String>> batch);
+
+    /**
+     * @return {@link Worker} to preprocess the given sentences
+     */
+    abstract Worker createWorker(int randomSeed, int iter, Iterable<List<String>> batch);
 	
 	/** Worker thread that updates the neural network model */
 	abstract class Worker extends CallableVoid {
