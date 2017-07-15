@@ -1,6 +1,5 @@
 package com.HaikuMasterTrainingDataProcessor.word2vec.model;
 
-import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
 import com.HaikuMasterTrainingDataProcessor.word2vec.training.Word2VecTrainerBuilder;
 import com.google.common.collect.ImmutableList;
 
@@ -23,7 +22,6 @@ public class Word2VecModel {
     public final DoubleBuffer vectors;
     private final static long ONE_GB = 1024 * 1024 * 1024;
     private List<String> sentences;
-    private List<List<TokenTagData>> tokenTagDataMultiList;
 
     Word2VecModel(Iterable<String> vocab, int layerSize, DoubleBuffer vectors) {
         this.vocab = ImmutableList.copyOf(vocab);
@@ -57,11 +55,4 @@ public class Word2VecModel {
         return sentences;
     }
 
-    public List<List<TokenTagData>> getTokenTagDataMultiList() {
-        return tokenTagDataMultiList;
-    }
-
-    public void setTokenTagDataMultiList(List<List<TokenTagData>> tokenTagDataMultiList) {
-        this.tokenTagDataMultiList = tokenTagDataMultiList;
-    }
 }

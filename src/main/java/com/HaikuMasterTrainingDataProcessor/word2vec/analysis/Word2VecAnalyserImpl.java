@@ -1,8 +1,6 @@
 package com.HaikuMasterTrainingDataProcessor.word2vec.analysis;
 
-import com.HaikuMasterTrainingDataProcessor.preprocessor.SentencesPreprocessor;
-import com.HaikuMasterTrainingDataProcessor.tagging.data.SentencesData;
-import com.HaikuMasterTrainingDataProcessor.tagging.data.TokenTagData;
+import com.HaikuMasterTrainingDataProcessor.reader.FilteredHaikuMasterTextDataReader;
 import com.HaikuMasterTrainingDataProcessor.word2vec.model.Word2VecModel;
 import com.HaikuMasterTrainingDataProcessor.word2vec.neuralnetwork.NeuralNetworkType;
 import com.HaikuMasterTrainingDataProcessor.word2vec.training.Word2VecTrainerBuilder;
@@ -20,17 +18,15 @@ import java.util.List;
  */
 public class Word2VecAnalyserImpl implements Word2VecAnalyser {
 
-    private SentencesPreprocessor sentencesPreprocessor;
+    private FilteredHaikuMasterTextDataReader filteredHaikuMasterTextDataReader;
 
-    public Word2VecAnalyserImpl(SentencesPreprocessor sentencesPreprocessor) {
-        this.sentencesPreprocessor = sentencesPreprocessor;
+    public Word2VecAnalyserImpl(FilteredHaikuMasterTextDataReader filteredHaikuMasterTextDataReader) {
+        this.filteredHaikuMasterTextDataReader = filteredHaikuMasterTextDataReader;
     }
 
     @Override
     public Word2VecModel analyseCBOW() throws InterruptedException, IOException, TException {
-        SentencesData sentencesData = sentencesPreprocessor.preprocess();
-        List<String> sentences = sentencesData.getSentences();
-        List<List<TokenTagData>> tokenTagDataMultiList = sentencesData.getTokenTagDataMultiList();
+        List<String> sentences = filteredHaikuMasterTextDataReader.read();
         List<List<String>> tokens = Lists.transform(sentences, new Function<String, List<String>>() {
             @Override
             public List<String> apply(String input) {
@@ -39,12 +35,11 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
         });
 
         Word2VecModel model = Word2VecModel.trainer()
-                .setMinVocabFrequency(30)
+                .setMinVocabFrequency(20)
                 .useNumThreads(20)
-                .setWindowSize(5)
+                .setWindowSize(8)
                 .type(NeuralNetworkType.CBOW)
                 .setLayerSize(510)
-                .useHierarchicalSoftmax()
                 .useNegativeSamples(25)
                 .useHierarchicalSoftmax()
                 .setDownSamplingRate(1e-4)
@@ -57,15 +52,12 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
                 })
                 .train(tokens);
         model.setSentences(sentences);
-        model.setTokenTagDataMultiList(tokenTagDataMultiList);
         return model;
     }
 
     @Override
     public Word2VecModel analyseSkipgram() throws InterruptedException, IOException, TException {
-        SentencesData sentencesData = sentencesPreprocessor.preprocess();
-        List<String> sentences = sentencesData.getSentences();
-        List<List<TokenTagData>> tokenTagDataMultiList = sentencesData.getTokenTagDataMultiList();
+        List<String> sentences = filteredHaikuMasterTextDataReader.read();
         List<List<String>> tokens = Lists.transform(sentences, new Function<String, List<String>>() {
             @Override
             public List<String> apply(String input) {
@@ -76,7 +68,7 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
         Word2VecModel model = Word2VecModel.trainer()
                 .setMinVocabFrequency(20)
                 .useNumThreads(20)
-                .setWindowSize(5)
+                .setWindowSize(4)
                 .type(NeuralNetworkType.SKIP_GRAM)
                 .useHierarchicalSoftmax()
                 .setLayerSize(510)
@@ -91,7 +83,6 @@ public class Word2VecAnalyserImpl implements Word2VecAnalyser {
                 })
                 .train(tokens);
         model.setSentences(sentences);
-        model.setTokenTagDataMultiList(tokenTagDataMultiList);
         return model;
     }
 }

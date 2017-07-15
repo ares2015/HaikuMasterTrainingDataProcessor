@@ -23,19 +23,15 @@
 
     <bean id="tokenizer" class="com.HaikuMasterTrainingDataProcessor.tokenizing.TokenizerImpl"/>
 
-    <bean id="tagger" class="com.HaikuMasterTrainingDataProcessor.tagging.PosTaggerImpl"/>
-
     <bean id="sentenceFilter"
           class="com.HaikuMasterTrainingDataProcessor.preprocessor.filter.SentenceFilterImpl">
         <constructor-arg ref="tokenizer"/>
     </bean>
 
-    <bean id="sentencesPreprocessor"
-          class="com.HaikuMasterTrainingDataProcessor.preprocessor.SentencesPreprocessorImpl">
-        <constructor-arg ref="tagger"/>
-    </bean>
+    <bean id="reader" class="com.HaikuMasterTrainingDataProcessor.reader.BookTextReaderImpl"/>
 
-    <bean id="reader" class="com.HaikuMasterTrainingDataProcessor.reader.TextReaderImpl"/>
+    <bean id="filteredTextDataReader"
+          class="com.HaikuMasterTrainingDataProcessor.reader.FilteredHaikuMasterTextDataReaderImpl"/>
 
     <bean id="writer" class="com.HaikuMasterTrainingDataProcessor.writer.TrainingDataWriterImpl"/>
 
@@ -52,7 +48,7 @@
           class="com.HaikuMasterTrainingDataProcessor.word2vec.factory.Word2VecMatchTrainingRowFactoryImpl"/>
 
     <bean id="word2vecAnalyser" class="com.HaikuMasterTrainingDataProcessor.word2vec.analysis.Word2VecAnalyserImpl">
-        <constructor-arg ref="sentencesPreprocessor"/>
+        <constructor-arg ref="filteredTextDataReader"/>
     </bean>
 
     <bean id="haikuMasterTrainingDataProcessor"

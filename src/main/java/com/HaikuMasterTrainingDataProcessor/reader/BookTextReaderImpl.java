@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Oliver on 12/28/2016.
  */
-public class TextReaderImpl implements TextReader {
+public class BookTextReaderImpl implements BookTextReader {
 
     @Override
     public BookData readRawData() throws FileNotFoundException {

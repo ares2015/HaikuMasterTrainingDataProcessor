@@ -1,9 +1,7 @@
 package word2vec;
 
-import com.HaikuMasterTrainingDataProcessor.preprocessor.SentencesPreprocessor;
-import com.HaikuMasterTrainingDataProcessor.preprocessor.SentencesPreprocessorImpl;
-import com.HaikuMasterTrainingDataProcessor.tagging.PosTagger;
-import com.HaikuMasterTrainingDataProcessor.tagging.PosTaggerImpl;
+import com.HaikuMasterTrainingDataProcessor.reader.FilteredHaikuMasterTextDataReader;
+import com.HaikuMasterTrainingDataProcessor.reader.FilteredHaikuMasterTextDataReaderImpl;
 import com.HaikuMasterTrainingDataProcessor.tokenizing.Tokenizer;
 import com.HaikuMasterTrainingDataProcessor.tokenizing.TokenizerImpl;
 import com.HaikuMasterTrainingDataProcessor.word2vec.analysis.Word2VecAnalyser;
@@ -28,12 +26,9 @@ public class Word2VecTest {
 
     Tokenizer tokenizer = new TokenizerImpl();
 
-    PosTagger posTagger = new PosTaggerImpl();
+    FilteredHaikuMasterTextDataReader filteredHaikuMasterTextDataReader = new FilteredHaikuMasterTextDataReaderImpl();
 
-    SentencesPreprocessor sentencesPreprocessor = new SentencesPreprocessorImpl(posTagger);
-
-    Word2VecAnalyser word2VecAnalyser = new Word2VecAnalyserImpl(sentencesPreprocessor);
-
+    Word2VecAnalyser word2VecAnalyser = new Word2VecAnalyserImpl(filteredHaikuMasterTextDataReader);
 
     @Test
     public void testCBOW() throws IOException, TException, InterruptedException {
